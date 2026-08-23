@@ -6,7 +6,13 @@ include('shared.lua')
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
 ENT.Model = {"models/noob_dev2323/madness/npc/mag_torture_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
-ENT.StartHealth = 1000
+ENT.StartHealth = 2500
+ENT.HealthRegenParams = {
+	Enabled = true , -- Can it regenerate its health?
+	Amount = 10, -- How much should the health increase after every delay?
+	Delay = VJ.SET(1,1.5), -- Delay between each regeneration
+	ResetOnDmg = true, -- Should the delay reset when it receives damage?
+}
 ENT.Weapon_Disabled = true   -- Disable the ability for it to use weapons
 
 ENT.Bleeds = true -- Can it bleed? Controls all bleeding related components such blood decal, particle, pool, etc.
@@ -71,6 +77,13 @@ function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup)
         end	
 		self:SetBodygroup(2, 1)
     end
+end
+function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
+	if self:Health() <= (self:GetMaxHealth() / 2.2) and self.is_madness_hurt ~= true then
+		self.is_madness_hurt = true
+		util.ScreenShake(self:GetPos(), 25, 15, 6, 3000)
+		self:EmitSound( "noob_dev2323/madness/mag/MAGCHEERS - Trimmed.wav", 75, 100, 1, 136 )
+	end
 end
 function ENT:SetUpGibesOnDeath(dmginfo,hitgroup)
 	self.gib_head = true 

@@ -6,7 +6,7 @@ include('shared.lua')
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
 ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
-ENT.StartHealth = 30
+ENT.StartHealth = 45
 ENT.Bleeds = true -- Does the SNPC bleed? (Blood decal, particle, etc.)
 ENT.BloodColor = "Green" -- The blood type, this will determine what it should use (decal, particle, etc.)
 ENT.HasBloodParticle = true -- Does it spawn a particle when damaged?
@@ -22,7 +22,7 @@ ENT.SoundTbl_BeforeMeleeAttack = {"noob_dev2323/madness/vr_guy/VRGuyPain3.wav","
 ENT.PainSoundLevel = 130
 ENT.DeathSoundLevel = 130
 
-ENT.isVR = true  
+ENT.is_madness_VR = true  
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self.totalDamage = {}
