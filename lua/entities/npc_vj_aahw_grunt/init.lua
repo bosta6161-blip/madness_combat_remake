@@ -22,7 +22,7 @@ ENT.ControllerParams = {
 	FirstP_CameraBoneAng_Offset = 0, -- How much should the camera's angle be rotated by? | Useful for weird bone angles
 }
 ENT.DeathCorpseSetBoneAngles = true -- This can be used to stop the corpse glitching or flying on death
-ENT.DeathCorpseApplyForce = false -- If false, force will not be applied to the corpse
+ENT.DeathCorpseApplyForce = true  -- If false, force will not be applied to the corpse
 
 ENT.RunAwayOnUnknownDamage = true -- Should run away on damage
 
@@ -51,16 +51,16 @@ ENT.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/Punch1.wav","noob_dev232
 ENT.SoundTbl_BeforeMeleeAttack = {"noob_dev2323/madness/grunt/Grunt.wav","noob_dev2323/madness/grunt/Grunt-1.wav","noob_dev2323/madness/grunt/Grunt-2.wav","noob_dev2323/madness/grunt/Grunt-3.wav","noob_dev2323/madness/grunt/Grunt-4.wav","noob_dev2323/madness/grunt/Grunt-5.wav","noob_dev2323/madness/grunt/Grunt-6.wav","noob_dev2323/madness/grunt/Grunt-7.wav","noob_dev2323/madness/grunt/Grunt-8.wav"}
 
 ENT.DamageResponse = true -- Should it respond to damages while it has no enemy?
-ENT.Weapon_Disabled = true  -- Disable the ability for it to use weapons
+ENT.Weapon_Disabled = false   -- Disable the ability for it to use weapons
 ENT.DropDeathLoot = false -- Should it drop loot on death?
 
 
 ENT.Weapon_UnarmedBehavior = false   
 ENT.Weapon_CanCrouchAttack = false  -- Can it crouch while firing a weapon?
 ENT.AnimTbl_WeaponAttackCrouch = false  -- Animations to play while firing a weapon in crouched position
-ENT.AnimTbl_WeaponAttack = ACT_RANGE_ATTACK1 -- Animations to play while firing a weapon
-ENT.AnimTbl_WeaponAttackGesture = ACT_RANGE_ATTACK1  -- Gesture animations to play while firing a weapon | false = Don't play an animation
-ENT.Weapon_CanMoveFire = false -- Can it fire its weapon while it's moving
+ENT.AnimTbl_WeaponAttack = ACT_IDLE_PISTOL -- Animations to play while firing a weapon
+ENT.AnimTbl_WeaponAttackGesture = ACT_RANGE_ATTACK1   -- Gesture animations to play while firing a weapon | false = Don't play an animation
+ENT.Weapon_CanMoveFire = true    -- Can it fire its weapon while it's moving
 
 -----------------------------------custom---------------------------
 ENT.is_madness_VR = false 
@@ -103,6 +103,22 @@ function ENT:TranslateActivity(act)
 
     return act
 end
+function ENT:SetAnimationTranslations(wepHoldType)
+	print(wepHoldType)
+    if wepHoldType == "pistol" then ---the holdtype for the hatemace and other 2 handed weps
+		self.AnimationTranslations[ACT_IDLE]        = ACT_IDLE_PISTOL
+        self.AnimationTranslations[ACT_WALK]        = ACT_WALK_PISTOL
+        self.AnimationTranslations[ACT_RUN]         = ACT_RUN_PISTOL
+        self.AnimationTranslations[ACT_IDLE_ANGRY]  = ACT_IDLE_PISTOL
+        self.AnimationTranslations[ACT_WALK_AIM]    = ACT_HL2MP_WALK_FIST
+        self.AnimationTranslations[ACT_RUN_AIM]     = ACT_HL2MP_RUN_FIST
+		--self.AnimationTranslations[ACT_JUMP] 		= ACT_HL2MP_JUMP_FIST
+		--self.AnimationTranslations[ACT_GLIDE] 		= ACT_HL2MP_JUMP_FIST
+		--self.AnimationTranslations[ACT_LAND] 		= ACT_HL2MP_IDLE_FIST
+        self.AnimationTranslations[ACT_RANGE_ATTACK1]          = ACT_RANGE_ATTACK1
+	self.AnimationTranslations[ACT_GESTURE_RANGE_ATTACK1]  = ACT_RANGE_ATTACK1
+	end
+end
 function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup) 
 	if GetConVar("vj_madness_gore"):GetInt() == 1 then
 		if dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 90 then
@@ -135,10 +151,21 @@ function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
 		end )
 	end
 end
+-----------------------------------------------------------------------------------------------
+function ENT:OnWeaponReload() 
+	self:DropWeapon( nil, self:GetPos() )
+	self.grunt_NextText = CurTime() + 3
+	madness_combat_snpc_doText(self,table.Random( madness_npc_no_ammo_dialogue ))	
+end
+
 function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 	corpseEnt.HLR_Corpse_Decal = self.HasBloodDecal and VJ_PICK(self.CustomBlood_Decal) or ""
 
-	if self.isVR == true then
+	if self.is_madness_VR == true then
+		net.Start("vj_madness_combat.vr_particles")
+			net.WriteEntity(corpseEnt)
+		net.Broadcast()
+		corpseEnt:RemoveAllDecals()
 		corpseEnt:Fire("FadeAndRemove","",0.1)
 		for i = 0, corpseEnt:GetPhysicsObjectCount() - 1 do
 			local colide = corpseEnt:GetPhysicsObjectNum( i )

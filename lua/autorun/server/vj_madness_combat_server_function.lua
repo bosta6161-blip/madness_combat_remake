@@ -1,4 +1,5 @@
 util.AddNetworkString( "vj_madness_combat.text" ) 
+util.AddNetworkString( "vj_madness_combat.vr_particles" ) 
 
 function madness_combat_snpc_doText(ent,text)
 	timer.Simple( 0.05, function()

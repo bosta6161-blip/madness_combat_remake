@@ -13,6 +13,12 @@ ENT.HealthRegenParams = {
 	Delay = VJ.SET(1,1.5), -- Delay between each regeneration
 	ResetOnDmg = true, -- Should the delay reset when it receives damage?
 }
+ENT.JumpParams = {
+	Enabled = true, -- Can it do movement jumps?
+	MaxRise = 512, -- How high it can jump up ((S -> A) AND (S -> E))
+	MaxDrop = 512, -- How low it can jump down (E -> S)
+	MaxDistance = 1024, -- Maximum distance between Start (S) and End (E)
+}
 ENT.Weapon_Disabled = true   -- Disable the ability for it to use weapons
 
 ENT.Bleeds = true -- Can it bleed? Controls all bleeding related components such blood decal, particle, pool, etc.
@@ -28,6 +34,8 @@ ENT.MeleeAttackDamageDistance = 150-- How far does the damage go?
 ENT.MeleeAttackDamage = 55
 ENT.MeleeAttackAnimationFaceEnemy = true-- Should it face the enemy while playing the melee attack animation?
 ENT.HasMeleeAttackKnockBack = true -- Should knockback be applied on melee hit? | Use "MeleeAttackKnockbackVelocity" function to edit the velocity
+
+
 
 ENT.Level = 1
 ENT.aiai = false 
