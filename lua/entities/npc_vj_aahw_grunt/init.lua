@@ -110,13 +110,13 @@ function ENT:SetAnimationTranslations(wepHoldType)
         self.AnimationTranslations[ACT_WALK]        = ACT_WALK_PISTOL
         self.AnimationTranslations[ACT_RUN]         = ACT_RUN_PISTOL
         self.AnimationTranslations[ACT_IDLE_ANGRY]  = ACT_IDLE_PISTOL
-        self.AnimationTranslations[ACT_WALK_AIM]    = ACT_HL2MP_WALK_FIST
-        self.AnimationTranslations[ACT_RUN_AIM]     = ACT_HL2MP_RUN_FIST
+        self.AnimationTranslations[ACT_WALK_AIM]    = ACT_WALK_PISTOL
+        self.AnimationTranslations[ACT_RUN_AIM]     = ACT_RUN_PISTOL
 		--self.AnimationTranslations[ACT_JUMP] 		= ACT_HL2MP_JUMP_FIST
 		--self.AnimationTranslations[ACT_GLIDE] 		= ACT_HL2MP_JUMP_FIST
 		--self.AnimationTranslations[ACT_LAND] 		= ACT_HL2MP_IDLE_FIST
-        self.AnimationTranslations[ACT_RANGE_ATTACK1]          = ACT_RANGE_ATTACK1
-	self.AnimationTranslations[ACT_GESTURE_RANGE_ATTACK1]  = ACT_RANGE_ATTACK1
+        self.AnimationTranslations[ACT_RANGE_ATTACK1]          = ACT_IDLE_PISTOL
+		self.AnimationTranslations[ACT_GESTURE_RANGE_ATTACK1]  = ACT_RANGE_ATTACK1
 	end
 end
 function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup) 
@@ -231,7 +231,9 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 		end
 		corpseEnt.Head_gibbed = true 
 		if self.is_madness_VR == false then
-			local Vel = self:GetRight()*math.Rand(-1000,1000)+self:GetForward()*math.Rand(-1000,10) 
+			local forceMult = math.Clamp(dmginfo:GetDamage(), 0, 1000 )
+        	
+			local Vel = dmginfo:GetDamageForce():GetNormalized()*forceMult + VectorRand()*forceMult
 			if self.is_yellow_blood == true then
 				if GetConVar("vj_madness_blood_mess"):GetInt() == 1 then 
 					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})

@@ -86,7 +86,7 @@ function madness_combat_vr_particles(ent)
                         particle:SetVelocityScale(true)
                         particle:SetLighting( true)
 
-                        particle:SetGravity( Vector( 0, 0, -350 ) )
+                        particle:SetGravity( Vector( 0, 0, -100 ) )
                         particle:SetVelocity(Vector( math.random(-40,40), math.random(-40,40), math.random(50,140) ))
                         particle:SetCollide( true )	
                     end
