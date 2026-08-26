@@ -120,7 +120,7 @@ function ENT:SetAnimationTranslations(wepHoldType)
 	end
 end
 function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup) 
-	if GetConVar("vj_madness_gore"):GetInt() == 1 then
+	if GetConVar("vj_madness_gore"):GetInt() == 1 and not self.is_madness_VR then
 		if dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 90 then
 			if self.madness_head_damege_table[hitgroup] or hitgroup == 15 then 
 				self.gib_type = "head_less"
