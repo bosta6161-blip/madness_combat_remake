@@ -65,34 +65,35 @@ function madness_combat_vr_particles(ent)
     if ent:IsValid() then 
         local boneCount = ent:GetBoneCount()
         timer.Create( "limb_bone_timer"..ent:EntIndex(),0.1,100, function() 
-            for i = 0, boneCount - 1 do
-                local pos = ent:GetBonePosition(i+math.random(-5,5),math.random(-5,5),math.random(-5,5))
+            if ent:IsValid() then
+                for i = 0, boneCount - 1 do
+                    local pos = ent:GetBonePosition(i+math.random(-5,5),math.random(-5,5),math.random(-5,5))
 
-                if pos then
-                    for i=1,math.random(10,30) do
-                    local emitter = ParticleEmitter(pos)
+                    if pos then
+                        local emitter = ParticleEmitter(pos)
 
-                    if emitter then
-                        local particle = emitter:Add("decals/madness_trail", pos)
+                        if emitter then
+                            local particle = emitter:Add("decals/madness_trail", pos)
 
-                        if particle then
-                            particle:SetDieTime( 3 )
+                            if particle then
+                                particle:SetDieTime( 3 )
 
-                            particle:SetStartAlpha( math.random( 200, 255 ) )
-                            particle:SetColor( 0,255, 0 )
-                            particle:SetStartSize( math.random( 1, 2,5 ) )
+                                particle:SetStartAlpha( math.random( 200, 255 ) )
+                                particle:SetColor( 0,255, 0 )
+                                particle:SetStartSize( math.random( 1, 2,5 ) )
 
-                            particle:SetEndAlpha( 0 )
-                            particle:SetEndSize( 1 )
-                            particle:SetVelocityScale(true)
-                            particle:SetLighting( true)
+                                particle:SetEndAlpha( 0 )
+                                particle:SetEndSize( 1 )
+                                particle:SetVelocityScale(true)
+                                particle:SetLighting( true)
 
-                            particle:SetGravity( Vector( 0, 0, -100 ) )
-                            particle:SetVelocity(Vector( math.random(-40,40), math.random(-40,40), math.random(50,140) ))
-                            particle:SetCollide( true )	
+                                particle:SetGravity( Vector( 0, 0, -100 ) )
+                                particle:SetVelocity(Vector( math.random(-40,40), math.random(-40,40), math.random(50,140)))
+                                particle:SetCollide( true )	
+                            end 
+
+                            emitter:Finish()
                         end
-
-                        emitter:Finish()
                     end
                 end
             end
