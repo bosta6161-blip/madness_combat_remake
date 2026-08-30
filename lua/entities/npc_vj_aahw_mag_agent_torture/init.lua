@@ -43,6 +43,7 @@ ENT.is_madness_combat_npc = true
 ENT.SoundTbl_FootStep = {"noob_dev2323/madness/grunt/foot_step.wav"}
 ENT.HasWorldShakeOnMove = true 
 
+ENT.SightDistance = 18000 -- Initial sight distance | To retrieve: "self:GetMaxLookDistance()" | To change: "self:SetMaxLookDistance(distance)"
 
 ENT.SoundTbl_BeforeMeleeAttack = {"noob_dev2323/madness/mag/MAGAttack1.wav","noob_dev2323/madness/mag/MAGAttack2.wav","noob_dev2323/madness/mag/MAGAttack3.wav"}
 ENT.SoundTbl_Death = {"noob_dev2323/madness/mag/MAGDEATHS - Trimmed (2).wav","noob_dev2323/madness/mag/MAGDEATHS - Trimmed (3).wav","noob_dev2323/madness/mag/MAGDEATHS - Trimmed.wav"}
