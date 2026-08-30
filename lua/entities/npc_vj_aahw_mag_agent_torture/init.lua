@@ -39,6 +39,7 @@ ENT.HasMeleeAttackKnockBack = true -- Should knockback be applied on melee hit? 
 
 ENT.Level = 1
 ENT.aiai = false 
+ENT.is_madness_combat_npc = true
 ENT.SoundTbl_FootStep = {"noob_dev2323/madness/grunt/foot_step.wav"}
 ENT.HasWorldShakeOnMove = true 
 

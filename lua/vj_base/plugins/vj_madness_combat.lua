@@ -18,6 +18,7 @@ VJ.AddNPC("aahw grunt melee", "npc_vj_aahw_grunt_melee", spawnCategory) -- Adds 
 VJ.AddNPC("mag agent torture", "npc_vj_aahw_mag_agent_torture", spawnCategory) -- Adds this abomination to the spawnmenu
 VJ.AddNPC("aahw grunt suicidal bomber", "npc_vj_aahw_grunt_suicidal_bomber", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw vr training buddy", "npc_vj_aahw_vr_training_buddy", spawnCategory) -- Adds a NPC to the spawnmenu
+VJ.AddNPC("aahw zombie grunt", "npc_vj_aahw_zombie_grunt", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddClientConVar("vj_madness_blood_mess", 0)
 VJ.AddClientConVar("vj_madness_gore", 1)
 VJ.AddClientConVar("vj_madness_can_gib_ragdoll", 1)

@@ -9,7 +9,7 @@ ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will p
 ENT.StartHealth = 30
 ENT.VJ_NPC_Class = {"CLASS_AAHW"} -- NPCs with the same class with be allied to each other
 ENT.Weapon_Disabled = true  -- Disable the ability for it to use weapons
-ENT.MeleeAttackDistance = 50 -- How close does it have to be until it attacks?
+ENT.MeleeAttackDistance = 79 -- How close does it have to be until it attacks?
 ENT.self_bomb = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()

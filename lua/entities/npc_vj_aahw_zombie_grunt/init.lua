@@ -1,8 +1,8 @@
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
-ENT.StartHealth = 60 -- or you can use a convar: GetConVarNumber("vj_dum_dummy_h")
+ENT.Model = {"models/noob_dev2323/madness/npc/zeds_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
+ENT.StartHealth = 130 -- or you can use a convar: GetConVarNumber("vj_dum_dummy_h")
 ENT.VJ_NPC_Class = {"CLASS_AAHW"} -- NPCs with the same class with be allied to each other
 
 ENT.Bleeds = true -- Can it bleed? Controls all bleeding related components such blood decal, particle, pool, etc.
@@ -11,8 +11,6 @@ ENT.HasBloodDecal = true -- Should it spawn a decal when damaged?
 ENT.BloodColor = VJ.BLOOD_COLOR_RED
 ENT.BloodDecal = {"VJ_AAWH_GRUNT_BLOOD"}
 ENT.HasBloodPool = false  -- Should a blood pool spawn by its corpse?
-
-ENT.SightDistance = 18000 -- Initial sight distance | To retrieve: "self:GetMaxLookDistance()" | To change: "self:SetMaxLookDistance(distance)"
 
 ENT.ControllerParams = {
 	CameraMode = 1, -- Sets the default camera mode | 1 = Third Person, 2 = First Person
@@ -144,7 +142,7 @@ function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
 		self.MeleeAttackDamage = 7
 		self.AnimTbl_MeleeAttack = {"vjges_punch_hunt_01","vjges_punch_hunt_02"} -- Melee Attack Animations
 	end
-	if ( hitgroup == HITGROUP_LEFTLEG ) or ( hitgroup == HITGROUP_RIGHTLEG ) and self:GetActivity() == ACT_RUN and math.random(1, 2) == 1 and dmginfo:GetDamage() >= 40 and self.CanFlinch == 1 then
+	if ( hitgroup == HITGROUP_LEFTLEG ) or ( hitgroup == HITGROUP_RIGHTLEG ) and self:GetActivity() == ACT_RUN and math.random(1, 2) == 1 and self.CanFlinch == 1 then
 		self.grunt_NextStumbleT = CurTime() + 3
 		self:VJ_ACT_PLAYACTIVITY("run_stumble_01",true,2)
 		self.CanFlinch = 0
@@ -154,7 +152,7 @@ function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
 			end
 		end )
 	end	
-	if ( hitgroup == HITGROUP_CHEST ) or ( hitgroup == HITGROUP_STOMACH ) and math.random(1, 3) == 1 and dmginfo:GetDamage() >= 40 and self.CanFlinch == 1 then
+	if ( hitgroup == HITGROUP_CHEST ) or ( hitgroup == HITGROUP_STOMACH ) and math.random(1, 2) == 1 and self.CanFlinch == 1 then
 		self.grunt_NextStumbleT = CurTime() + 3
 		self:VJ_ACT_PLAYACTIVITY("stumble_back",true,2)
 		self.CanFlinch = 0

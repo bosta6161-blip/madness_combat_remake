@@ -1,9 +1,12 @@
 --TODO list
 
 --fix script
+--fall back animation
+--bullet defece
 --surfaceprop 
 --make npc avoid crossrair
 --view model weapons
 --mask damege
 --zeds
 --player models
+--flex fire effect
