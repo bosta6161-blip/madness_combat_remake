@@ -35,10 +35,9 @@ ENT.MeleeAttackDamage = 55
 ENT.MeleeAttackAnimationFaceEnemy = true-- Should it face the enemy while playing the melee attack animation?
 ENT.HasMeleeAttackKnockBack = true -- Should knockback be applied on melee hit? | Use "MeleeAttackKnockbackVelocity" function to edit the velocity
 
-
+ENT.HasMeleeAttackKnockBack = true 
 
 ENT.Level = 1
-ENT.aiai = false 
 ENT.is_madness_combat_npc = true
 ENT.SoundTbl_FootStep = {"noob_dev2323/madness/grunt/foot_step.wav"}
 ENT.HasWorldShakeOnMove = true 

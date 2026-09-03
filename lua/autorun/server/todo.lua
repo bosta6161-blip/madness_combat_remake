@@ -13,3 +13,4 @@
 --grunt_suicidal_bomber sound
 --zombie eat corpse
 --foot step
+--bleed

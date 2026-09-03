@@ -1,21 +1,19 @@
 AddCSLuaFile("shared.lua")
 include('shared.lua')
 /*-----------------------------------------------
-	*** Copyright (c) 2012-2017 by DrVrej, All rights reserved. ***
+	*** Copyright (c) 2012-2026 by DrVrej, All rights reserved. ***
 	No parts of this code or any of its contents may be reproduced, copied, modified or adapted,
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
 ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
-ENT.StartHealth = 30
+ENT.StartHealth = 100
 ENT.VJ_NPC_Class = {"CLASS_AAHW"} -- NPCs with the same class with be allied to each other
 ENT.Weapon_Disabled = true  -- Disable the ability for it to use weapons
 ENT.MeleeAttackDistance = 90 -- How close does it have to be until it attacks?
 ENT.is_madness_bomb = true
 
-ENT.grunt_status = {
-	no_pain = true,
-	is_trained = false 
-}
+ENT.grunt_no_pain_animation = true
+ENT.grunt_no_stun = true 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self.gib_type = "ok"
@@ -57,7 +55,7 @@ end
 	-- All functions and variables are located inside the base files. It can be found in the GitHub Repository: https://github.com/DrVrej/VJ-Base
 
 /*-----------------------------------------------
-	*** Copyright (c) 2012-2017 by DrVrej, All rights reserved. ***
+	*** Copyright (c) 2012-2026 by DrVrej, All rights reserved. ***
 	No parts of this code or any of its contents may be reproduced, copied, modified or adapted,
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
