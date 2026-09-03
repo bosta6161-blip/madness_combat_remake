@@ -18,11 +18,12 @@ ENT.ControllerParams = {
 	CameraMode = 1, -- Sets the default camera mode | 1 = Third Person, 2 = First Person
 	ThirdP_Offset = Vector(0, 0, 0), -- The offset for the controller when the camera is in third person
 	FirstP_Bone = "head", -- If left empty, the base will attempt to calculate a position for first person
-	FirstP_Offset = Vector(0, 0, 20), -- The offset for the controller when the camera is in first person
+	FirstP_Offset = Vector(10,0,15), -- The offset for the controller when the camera is in first person
 	FirstP_ShrinkBone = true, -- Should the bone shrink? Useful if the bone is obscuring the player's view
 	FirstP_CameraBoneAng = 0, -- Should the camera's angle be affected by the bone's angle? | 0 = No, 1 = Pitch, 2 = Yaw, 3 = Roll
 	FirstP_CameraBoneAng_Offset = 0, -- How much should the camera's angle be rotated by? | Useful for weird bone angles
 }
+
 ENT.DeathCorpseSetBoneAngles = true -- This can be used to stop the corpse glitching or flying on death
 ENT.DeathCorpseApplyForce = true  -- If false, force will not be applied to the corpse
 
@@ -37,6 +38,7 @@ ENT.MeleeAttackDamageDistance = 120 -- How far does the damage go?
 ENT.TimeUntilMeleeAttackDamage = 0.5 -- This counted in seconds | This calculates the time until it hits something
 ENT.NextAnyAttackTime_Melee = 0	 -- How much time until it can use any attack again? | Counted in Seconds
 ENT.MeleeAttackDamage = 10
+ENT.HasExtraMeleeAttackSounds = true -- Set to true to use the extra melee attack sounds
 
 ENT.AnimTbl_Flinch = {"vjges_flinch"} -- If it uses normal based animation, use this
 ENT.CanFlinch = 1 -- 0 = Don't flinch | 1 = Flinch at any damage | 2 = Flinch only from certain damages
@@ -53,27 +55,21 @@ ENT.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/Punch1.wav","noob_dev232
 ENT.SoundTbl_BeforeMeleeAttack = {"noob_dev2323/madness/grunt/Grunt.wav","noob_dev2323/madness/grunt/Grunt-1.wav","noob_dev2323/madness/grunt/Grunt-2.wav","noob_dev2323/madness/grunt/Grunt-3.wav","noob_dev2323/madness/grunt/Grunt-4.wav","noob_dev2323/madness/grunt/Grunt-5.wav","noob_dev2323/madness/grunt/Grunt-6.wav","noob_dev2323/madness/grunt/Grunt-7.wav","noob_dev2323/madness/grunt/Grunt-8.wav"}
 
 ENT.DamageResponse = true -- Should it respond to damages while it has no enemy?
-ENT.Weapon_Disabled = false   -- Disable the ability for it to use weapons
-ENT.DropDeathLoot = false -- Should it drop loot on death?
+ENT.Weapon_Disabled = true -- Disable the ability for it to use weapons
 
-
-ENT.Weapon_UnarmedBehavior = false   
-ENT.Weapon_CanCrouchAttack = false  -- Can it crouch while firing a weapon?
-ENT.AnimTbl_WeaponAttackCrouch = false  -- Animations to play while firing a weapon in crouched position
-ENT.AnimTbl_WeaponAttack = ACT_IDLE_PISTOL -- Animations to play while firing a weapon
-ENT.AnimTbl_WeaponAttackGesture = ACT_RANGE_ATTACK1   -- Gesture animations to play while firing a weapon | false = Don't play an animation
-ENT.Weapon_CanMoveFire = true    -- Can it fire its weapon while it's moving
-
+-----------------------------------sounds---------------------------
+ENT.SoundTbl_MeleeAttackExtra = {"noob_dev2323/madness/grunt/gruntpunch1.wav","noob_dev2323/madness/grunt/gruntpunch2.wav","noob_dev2323/madness/grunt/gruntpunch3.wav","noob_dev2323/madness/grunt/gruntpunch4.wav"}
 -----------------------------------custom---------------------------
 ENT.is_madness_VR = false 
 ENT.is_madness_combat_npc = true 
 ENT.grunt_NextStumbleT = CurTime() + 3
 ENT.grunt_NextText = CurTime() + 3
 ENT.is_madness_hurt = false
-ENT.grunt_status = {
-	life = 40,
-	is_trained = false 
-}
+ENT.AAHW_NextRunT = 0
+-----------------------------------status---------------------------
+ENT.grunt_hold_type = "none"
+ENT.grunt_no_pain_animation = false
+
 ENT.madness_head_damege_table = {
 	[13] = 3,
 	[14] = 4,
@@ -93,7 +89,7 @@ function ENT:OnAlert(ent)
 	end
 end
 function ENT:TranslateActivity(act)
-	if self.is_madness_hurt == true then --if is hurt swap animations
+	if self.is_madness_hurt == true and self.grunt_no_pain_animation == false then --if is hurt swap animations
 		if act == ACT_WALK then
 			return ACT_WALK_HURT -- your activity here
 		elseif act == ACT_RUN then
@@ -102,25 +98,19 @@ function ENT:TranslateActivity(act)
 			return self:GetSequenceActivity(self:LookupSequence("idle_hunt")) -- your activity here
 		end
 	end
+	if self.grunt_hold_type == "pistol" then --if is hurt swap animations
+		if act == ACT_WALK then
+			return ACT_WALK_PISTOL -- your activity here
+		elseif act == ACT_RUN then
+			return ACT_RUN_PISTOL -- your activity here
+		elseif act == ACT_IDLE then
+			return ACT_IDLE_PISTOL -- your activity here
+		end
+	end
 
     return act
 end
-function ENT:SetAnimationTranslations(wepHoldType)
-	print(wepHoldType)
-    if wepHoldType == "pistol" then ---the holdtype for the hatemace and other 2 handed weps
-		self.AnimationTranslations[ACT_IDLE]        = ACT_IDLE_PISTOL
-        self.AnimationTranslations[ACT_WALK]        = ACT_WALK_PISTOL
-        self.AnimationTranslations[ACT_RUN]         = ACT_RUN_PISTOL
-        self.AnimationTranslations[ACT_IDLE_ANGRY]  = ACT_IDLE_PISTOL
-        self.AnimationTranslations[ACT_WALK_AIM]    = ACT_WALK_PISTOL
-        self.AnimationTranslations[ACT_RUN_AIM]     = ACT_RUN_PISTOL
-		--self.AnimationTranslations[ACT_JUMP] 		= ACT_HL2MP_JUMP_FIST
-		--self.AnimationTranslations[ACT_GLIDE] 		= ACT_HL2MP_JUMP_FIST
-		--self.AnimationTranslations[ACT_LAND] 		= ACT_HL2MP_IDLE_FIST
-        self.AnimationTranslations[ACT_RANGE_ATTACK1]          = ACT_IDLE_PISTOL
-		self.AnimationTranslations[ACT_GESTURE_RANGE_ATTACK1]  = ACT_RANGE_ATTACK1
-	end
-end
+
 function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup) 
 	if GetConVar("vj_madness_gore"):GetInt() == 1 and not self.is_madness_VR then
 		if dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 90 then
@@ -133,8 +123,6 @@ function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup)
 				self.gib_type = "head_damege" 
 			end
 		end
-
-		print(dmginfo:GetDamageForce())
 	end
 end
 function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
@@ -165,13 +153,9 @@ function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
 		end )
 	end
 end
------------------------------------------------------------------------------------------------
-function ENT:OnWeaponReload() 
-	self:DropWeapon( nil, self:GetPos() )
-	self.grunt_NextText = CurTime() + 3
-	madness_combat_snpc_doText(self,table.Random( madness_npc_no_ammo_dialogue ))	
-end
 
+
+-----------------------------------------------------------------------------------------------
 function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 	corpseEnt.HLR_Corpse_Decal = self.HasBloodDecal and VJ_PICK(self.CustomBlood_Decal) or ""
 
@@ -253,7 +237,7 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
 					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
 					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-										self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
+					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
 					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
 					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
 				end

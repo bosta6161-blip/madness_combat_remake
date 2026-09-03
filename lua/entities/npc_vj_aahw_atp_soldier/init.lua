@@ -10,6 +10,10 @@ ENT.StartHealth = 70
 ENT.Weapon_Disabled = false   -- Disable the ability for it to use weapons
 ENT.Weapon_IgnoreSpawnMenu = false  -- Should it ignore weapon overrides from the spawn menu?
 ENT.BloodDecal = {"VJ_AAWH_GRUNT_YELLOW_BLOOD"}
+ENT.grunt_status = {
+	no_pain = true,
+	is_trained = false 
+}
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self.totalDamage = {}

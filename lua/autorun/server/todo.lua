@@ -1,7 +1,6 @@
 --TODO list
 
---fix script
---fall back animation
+--nevada map
 --bullet defece
 --surfaceprop 
 --make npc avoid crossrair
@@ -10,3 +9,7 @@
 --zeds
 --player models
 --flex fire effect
+--jettpack npc
+--grunt_suicidal_bomber sound
+--zombie eat corpse
+--foot step

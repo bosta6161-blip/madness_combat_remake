@@ -15,7 +15,7 @@ function vj_madness_make_corpse_destructible(ent)
 	if ent:IsValid() and GetConVar("vj_madness_can_gib_ragdoll"):GetBool() == true then
 	    ent.vj_madness_destructible_Corpse = true
 	    ent.vj_madness_Start_delay = CurTime() + 1
-	    ent.ragdoll_Health = 400  
+	    ent:SetHealth(400) 
 
 	    local defalt_value = 50
 	    ent.madness_boneHealth = {}
@@ -36,43 +36,47 @@ hook.Add("EntityTakeDamage", "EntityMadness_ent_TakeDamage", function(target, dm
 			elseif dmginfo:IsExplosionDamage() && dmg_force >= 10 then 
 				dmginfo:ScaleDamage(4) --escale the damege on explosions     
 			end 
-			local hit = madness_GetClosestPhysBone(target,dmginfo) --get hit physbone
-			if hit == nil then
-				return 
-			end
-			local bone = target:TranslatePhysBoneToBone(hit)
-			local bone_name = target:GetBoneName( bone ) 		
+			if doDamege == true then
+				local hit
 
-			if target.madness_boneHealth[bone_name] then
-				target.madness_boneHealth[bone_name] = target.madness_boneHealth[bone_name] - dmginfo:GetDamage()
-				print("health"..target.madness_boneHealth[bone_name])
-			end
-
-			if target.madness_boneHealth["head"] <= 0 && !target.Head_gibbed then 
-				target.Head_gibbed = true 
-				local dmg_force = dmginfo:GetDamageForce()
-				madness_gib_head(target,dmg_force)
-			end
-			if target.madness_boneHealth["R_foot"] <= 0 && !target.R_foot then 
-				target.R_foot = true 
-				target:ManipulateBoneScale(target:LookupBone("R_foot"),Vector(0,0,0))
-				madness_physbone_colide(target,"R_foot",true)
-			end
-			if target.madness_boneHealth["L_foot"] <= 0 && !target.L_foot then 
-				target.L_foot = true 
-				target:ManipulateBoneScale(target:LookupBone("L_foot"),Vector(0,0,0))
-				madness_physbone_colide(target,"L_foot",true)
-			end
-			if !dmginfo:IsBulletDamage() or !dmginfo:IsDamageType(DMG_NEVERGIB) then
-				if doDamege == true  then 
-					target.ragdoll_Health = target.ragdoll_Health - dmginfo:GetDamage()		
+				local hit = madness_GetClosestPhysBone(target,dmginfo).PhysicsBone --get hit physbone
+				if hit == nil then
+					return 
 				end
-				if target.ragdoll_Health <= 0 and not target.fucked then 
-					target.fucked = true 
+				local bone = target:TranslatePhysBoneToBone(hit)
+				local bone_name = target:GetBoneName( bone ) 		
+
+				if target.madness_boneHealth[bone_name] then
+					target.madness_boneHealth[bone_name] = target.madness_boneHealth[bone_name] - dmginfo:GetDamage()
+					print("health"..target.madness_boneHealth[bone_name])
+				end
+
+				if target.madness_boneHealth["head"] <= 0 && !target.Head_gibbed then 
+					target.Head_gibbed = true 
 					local dmg_force = dmginfo:GetDamageForce()
-					timer.Simple( 0.05, function()
-						madness_ragdoll_gib(target,dmg_force)
-					end )
+					madness_gib_head(target,dmg_force)
+				end
+				if target.madness_boneHealth["R_foot"] <= 0 && !target.R_foot then 
+					target.R_foot = true 
+					target:ManipulateBoneScale(target:LookupBone("R_foot"),Vector(0,0,0))
+					madness_physbone_colide(target,"R_foot",true)
+				end
+				if target.madness_boneHealth["L_foot"] <= 0 && !target.L_foot then 
+					target.L_foot = true 
+					target:ManipulateBoneScale(target:LookupBone("L_foot"),Vector(0,0,0))
+					madness_physbone_colide(target,"L_foot",true)
+				end
+				if !dmginfo:IsBulletDamage() or !dmginfo:IsDamageType(DMG_NEVERGIB) then
+					if doDamege == true  then 
+						target:SetHealth(target:Health() - dmginfo:GetDamage())	
+					end
+					if target:Health() <= 0 and not target.fucked then 
+						target.fucked = true 
+						local dmg_force = dmginfo:GetDamageForce()
+						timer.Simple( 0.05, function()
+							madness_ragdoll_gib(target,dmg_force)
+						end )
+					end
 				end
 			end
 		end 
@@ -115,34 +119,12 @@ function madness_ragdoll_gib(target,dmg_force)
 end
 
 function madness_GetClosestPhysBone(ent,dmginfo)
-	local mdl = ent:GetModel()
-	local COLL_CACHE = {}
-
-	local vec_max = Vector(1, 1, 1)
-	local vec_min = -vec_max
-
-	local colls = COLL_CACHE[mdl]
-	if !colls then
-		colls = CreatePhysCollidesFromModel(mdl)
-		COLL_CACHE[mdl] = colls
-	end
-	local dmgpos = dmginfo:GetDamagePosition()
-
-	local dmgdir = dmginfo:GetDamageForce()
-	dmgdir:Normalize()
-
-	local ray_start = dmgpos - dmgdir * 50
-	local ray_end = dmgpos + dmgdir * 50
-
-	for phys_bone, coll in pairs(colls) do
-		phys_bone = phys_bone - 1
-		local bone = ent:TranslatePhysBoneToBone(phys_bone)
-		local pos, ang = ent:GetBonePosition(bone)
-		
-		if coll:TraceBox(pos, ang, ray_start, ray_end, vec_min, vec_max) then
-			return phys_bone
-		end
-	end
+    local tr = util.TraceLine({
+        start = dmginfo:GetDamagePosition(),
+        endpos = dmginfo:GetDamagePosition() + dmginfo:GetDamageForce():GetNormalized() * 256,
+        mask = MASK_SHOT
+    })
+	return tr
 end
 function madness_gib_head(target,dmg_force)
 	local bloodeffect = EffectData()
@@ -179,7 +161,7 @@ function madness_physbone_colide(target,bone,disable_motion)
 	colide:SetMass(0.01)
 end
 function bonemerge_prop_on_npc(model,ent)
-	ent.bonemerge_prop = ents.Create("prop_physics")
+	ent.bonemerge_prop = ents.Create("prop_dynamic")
 	ent.bonemerge_prop:SetModel(model)
 	ent.bonemerge_prop:SetLocalPos(ent:GetPos())
 	ent.bonemerge_prop:SetParent(ent)
@@ -204,7 +186,7 @@ function madness_make_vj_gibs(model,pos,dmg_force,yellow)
 	gib.BloodType = VJ.BLOOD_COLOR_RED
 	local phys = gib:GetPhysicsObject()
 	if IsValid(phys) then
-		phys:AddVelocity(Vector(math.Rand(-100, 100), math.Rand(-100, 100), math.Rand(150, 250)) + (dmg_force / 20))
+		phys:AddVelocity(Vector(math.Rand(-100, 100), math.Rand(-100, 100), math.Rand(150, 250)) + (dmg_force / 18))
 		phys:AddAngleVelocity(Vector(math.Rand(-200, 200), math.Rand(-200, 200), math.Rand(-200, 200)))
 	end
 	if GetConVar("vj_npc_gib_fade"):GetInt() == 1 then

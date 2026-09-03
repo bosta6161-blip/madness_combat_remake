@@ -9,12 +9,15 @@ ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will p
 ENT.StartHealth = 30
 ENT.VJ_NPC_Class = {"CLASS_AAHW"} -- NPCs with the same class with be allied to each other
 ENT.Weapon_Disabled = true  -- Disable the ability for it to use weapons
-ENT.MeleeAttackDistance = 79 -- How close does it have to be until it attacks?
-ENT.self_bomb = true
+ENT.MeleeAttackDistance = 90 -- How close does it have to be until it attacks?
+ENT.is_madness_bomb = true
+
+ENT.grunt_status = {
+	no_pain = true,
+	is_trained = false 
+}
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
-	self.totalDamage = {}
-	self.GetDamageType = {} --need to gib work
 	self.gib_type = "ok"
 	self.MeleeAttackDamage = 0
 	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_bombsuit.mdl",self)
