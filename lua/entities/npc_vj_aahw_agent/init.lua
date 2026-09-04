@@ -2,7 +2,7 @@ AddCSLuaFile("shared.lua")
 include('shared.lua')
 
 ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
-ENT.StartHealth = 115 
+ENT.StartHealth = 90 
 
 ENT.HasRangeAttack = true -- Should the SNPC have a range attack?
 ENT.RangeAttackEntityToSpawn = "obj_vj_bullet_shotgunbullet" -- The entity that is spawned when range attacking
@@ -17,13 +17,18 @@ ENT.NoChaseAfterCertainRange_CloseDistance = 1
 ENT.NoChaseAfterCertainRange_Type = "Regular"
 ENT.NextRangeAttackTime = 0.5
 
+	-- ====== Constantly Face Enemy ====== --
+ENT.ConstantlyFaceEnemy = true  -- Should it face the enemy constantly?
+ENT.ConstantlyFaceEnemy_IfVisible = true -- Should it only face the enemy if it's visible?
+ENT.ConstantlyFaceEnemy_IfAttacking = true  -- Should it face the enemy when attacking?
+ENT.ConstantlyFaceEnemy_Postures = "Moving" -- "Both" = Moving or standing | "Moving" = Only when moving | "Standing" = Only when standing
 
 ENT.RangeAttackSoundLevel = 100
 
 -- Custom
 ENT.AAHW_NextRunT = 0
-ENT.MaxAmmo = 8
-ENT.CurrentAmmo = 8
+ENT.MaxAmmo = 12
+ENT.CurrentAmmo = 12
 ENT.Reloading = false
 ENT.ReloadTime = 2.0 
 ENT.grunt_no_pain_animation = true
