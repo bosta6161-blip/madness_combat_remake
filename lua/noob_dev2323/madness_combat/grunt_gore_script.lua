@@ -55,74 +55,15 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 			sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
 		end
 	end
+	if self.melee_model then
+		self:CreateGibEntity("prop_physics",self.melee_model,{Pos=self:LocalToWorld(Vector(-50,20,0)),Ang=self:GetAngles()+Angle(90,0,0),Vel=vel})
+	end
 	if self.gib_type == "head_less" and not self.head_sliced then
-		if self.HasGibOnDeathEffects and not self.isVR == true then
-			local bloodeffect = EffectData()
-			bloodeffect:SetOrigin(corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head_gib")).Pos)
-			if self.is_yellow_blood == true then
-				bloodeffect:SetScale(15)
-				bloodeffect:SetColor(VJ_Color2Byte(Color(229,255,0)))
-			else
-				bloodeffect:SetScale(30)
-				bloodeffect:SetColor(VJ_Color2Byte(Color(130,19,10)))
-			end
-
-			util.Effect("VJ_Blood1",bloodeffect)
-
-			local bloodeffect = ents.Create("info_particle_system")
-			if self.is_yellow_blood == true then
-				bloodeffect:SetKeyValue("effect_name","qblood_advisor_shrapnel_impact")
-			else
-				bloodeffect:SetKeyValue("effect_name","blood_advisor_puncture_withdraw")
-			end
-			bloodeffect:SetPos(corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head")).Pos)
-			bloodeffect:SetAngles(corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head")).Ang)
-			bloodeffect:SetParent(corpseEnt)
-			bloodeffect:Fire("SetParentAttachment","head")
-			bloodeffect:Spawn()
-			bloodeffect:Activate()
-			bloodeffect:Fire("Start","",0)
-			bloodeffect:Fire("Kill","",7) 
-		end
 		corpseEnt.Head_gibbed = true 
 		if self.is_madness_VR == false then
-			local forceMult = math.Clamp(dmginfo:GetDamage(), 0, 1000 )
-        	
-			local Vel = dmginfo:GetDamageForce():GetNormalized()*forceMult + VectorRand()*forceMult
-			if self.is_yellow_blood == true then
-				if GetConVar("vj_madness_blood_mess"):GetInt() == 1 then 
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-				end
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib04.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("5")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib04.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head")).Pos,Ang=self:GetAngles(),Vel=vel})
-			else
-				if GetConVar("vj_madness_blood_mess"):GetInt() == 1 then 
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib02.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib01.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("5")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib02.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib02.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib01.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib01.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head")).Pos,Ang=self:GetAngles(),Vel=vel})
-				end
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk2.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk1.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("5")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk6.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk4.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk5.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk3.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head")).Pos,Ang=self:GetAngles(),Vel=vel})
-			end
+			corpseEnt:SetBodygroup(2, 0)
+			corpseEnt:SetBodygroup(1, 1)
+			sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
 		end
-		
-		corpseEnt:SetBodygroup(2, 0)
-		corpseEnt:SetBodygroup(1, 1)
-		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
 	end
 end

@@ -61,6 +61,7 @@ ENT.grunt_NextStumbleT = CurTime() + 3
 ENT.grunt_NextText = CurTime() + 3
 ENT.is_madness_hurt = false
 ENT.AAHW_NextRunT = 0
+
 -----------------------------------status---------------------------
 ENT.grunt_hold_type = "none"
 ENT.grunt_no_pain_animation = false
@@ -137,67 +138,56 @@ function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
 		end
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnAcceptInput(key, activator, caller, data)
-	print(key)
-	if key == "event_emit step" then
-		self:FootStepSoundCode()
-	elseif key == "event_mattack both" then
-		self:MeleeAttackCode()
-	elseif key == "event_rattack" then
- if self.Reloading then return end
+function ENT:EQUIP_A_MELEE_WEAPON()
+	self:VJ_ACT_PLAYACTIVITY("vjges_melee_attack_02", false, 0, true, 0)
+	local melee_weapons = {
+		[1] ="models/noob_dev2323/madness/weapons/w_crowbar.mdl",
+		[2] ="models/noob_dev2323/madness/weapons/w_bowieKnife.mdl",
+		[3] ="models/noob_dev2323/madness/weapons/w_iron_sword.mdl",
+		[4] ="models/noob_dev2323/madness/weapons/w_bat.mdl",
+		[5] ="models/noob_dev2323/madness/weapons/w_baton.mdl",
+		[6] ="models/noob_dev2323/madness/weapons/w_iron_pipe.mdl",
+		[7] ="models/noob_dev2323/madness/weapons/w_hammer.mdl",
+		[8] ="models/noob_dev2323/madness/weapons/w_megachette.mdl"
+	} 
+	melee_model_type = {
+		["models/noob_dev2323/madness/weapons/w_crowbar.mdl"] = "blunt",
+		["models/noob_dev2323/madness/weapons/w_bowieKnife.mdl"] = "stab",
+		["models/noob_dev2323/madness/weapons/w_iron_sword.mdl"] = "stab",
+		["models/noob_dev2323/madness/weapons/w_bat.mdl"] = "blunt",
+		["models/noob_dev2323/madness/weapons/w_baton.mdl"] = "blunt",
+		["models/noob_dev2323/madness/weapons/w_iron_pipe.mdl"] = "blunt",
+		["models/noob_dev2323/madness/weapons/w_hammer.mdl"] = "blunt",
+		["models/noob_dev2323/madness/weapons/w_megachette.mdl"] = "stab"
+	} 
+	self.MeleeAttackDamage = 35 --set grunt damege
+	local melee_weapon_model = melee_weapons[math.random(1, #melee_weapons)]
 
-    if self.CurrentAmmo <= 0 then
-        self:StartReload()
-        return
+    if melee_model_type[melee_weapon_model] then
+        if melee_model_type[melee_weapon_model] == "stab" then
+			self.melee_model = melee_weapon_model
+			self.MeleeAttackDamageType = DMG_SLASH
+			self.AnimTbl_MeleeAttack = {"vjges_stab","vjges_melee_attack_01","vjges_melee_attack_02"}
+			self.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/slash_01.wav","noob_dev2323/madness/melee/slash_02.wav","noob_dev2323/madness/melee/slash_03.wav","noob_dev2323/madness/melee/slash_04.wav"}
+			
+			self.MeleeAttackBleedEnemy = true -- Should it bleed enemies it hits?
+			self.MeleeAttackBleedEnemyChance = 3 -- Chance that the enemy bleeds | 1 = always
+			self.MeleeAttackBleedEnemyDamage = 1 -- How much damage per repetition
+			self.MeleeAttackBleedEnemyTime = 1 -- How much time until the next repetition?
+			self.MeleeAttackBleedEnemyReps = 4 -- How many repetitions?
+		elseif melee_model_type[melee_weapon_model] == "blunt" then
+			self.MeleeAttackDamage = 25
+			self.melee_model = melee_weapon_model
+			self.MeleeAttackDamageType = DMG_CLUB
+			self.AnimTbl_MeleeAttack = {"vjges_melee_attack_01","vjges_melee_attack_02"}
+			self.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/BigHit-1.wav","noob_dev2323/madness/melee/BigHit-2.wav","noob_dev2323/madness/melee/BigHit.wav"}
+		end
     end
 
-    local enemy = self:GetEnemy()
-    if not IsValid(enemy) then return end
-
-    local attID = self:LookupAttachment("shot")
-    if not attID or attID <= 0 then return end
-
-    local att = self:GetAttachment(attID)
-    if not att then return end
-
-    local bullet = {}
-    bullet.Num = 1
-    bullet.Src = att.Pos
-    bullet.Dir = (enemy:BodyTarget(att.Pos) - att.Pos):GetNormalized()
-    bullet.Spread = Vector(0.09, 0.09, 0.05)
-    bullet.Tracer = 1
-    bullet.TracerName = "Tracer"
-    bullet.Force = 4
-    bullet.Damage = 4
-
-    self:FireBullets(bullet)
-
-	VJ.EmitSound(self, "AAHW/shotgunshot.wav", 80, 100)
-
-    ParticleEffectAttach("vj_rifle_full", PATTACH_POINT_FOLLOW, self, attID)
-    self.CurrentAmmo = self.CurrentAmmo - 1
-	end
+	bonemerge_prop_on_npc(self.melee_model,self)
 end
----------------------------------------------------------------------------------------------------------------------------------------------
--- CUSTOM RELOAD COSMETIC THINGY
-function ENT:StartReload()
-    if self.Reloading then return end
 
-    self.Reloading = true
-        self.HasRangeAttack = false
-
-	VJ.EmitSound(self, "weapons/shotgun/shotgun_reload1.wav", 75, 100)
-	self:PlayAnim({"vjges_reload_mp5"}, true, false)
-
-    timer.Simple(self.ReloadTime, function()
-        if not IsValid(self) then return end
-
-        self.CurrentAmmo = self.MaxAmmo
-        self.Reloading = false
-        self.HasRangeAttack = true
-    end)
-end
+include( "noob_dev2323/madness_combat/grunt_guns_script.lua" ) --include gore script
 include( "noob_dev2323/madness_combat/grunt_gore_script.lua" ) --include gore script
 
 -- All functions and variables are located inside the base files. It can be found in the GitHub Repository: https://github.com/DrVrej/VJ-Base

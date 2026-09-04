@@ -4,35 +4,17 @@ include('shared.lua')
 ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
 ENT.StartHealth = 90 
 
-ENT.HasRangeAttack = true -- Should the SNPC have a range attack?
-ENT.RangeAttackEntityToSpawn = "obj_vj_bullet_shotgunbullet" -- The entity that is spawned when range attacking
-ENT.AnimTbl_RangeAttack = {"vjges_weaponshotg"} -- Range Attack Animations
-ENT.RangeDistance = 5000 -- This is how far away it can shoot
-ENT.RangeToMeleeDistance = 80 -- How close does it have to be until it uses melee?
-ENT.TimeUntilRangeAttackProjectileRelease = false -- How much time until the projectile code is ran?
-
-ENT.NoChaseAfterCertainRange = true
-ENT.NoChaseAfterCertainRange_FarDistance = 3000 
-ENT.NoChaseAfterCertainRange_CloseDistance = 1 
-ENT.NoChaseAfterCertainRange_Type = "Regular"
-ENT.NextRangeAttackTime = 0.5
-
-	-- ====== Constantly Face Enemy ====== --
-ENT.ConstantlyFaceEnemy = true  -- Should it face the enemy constantly?
-ENT.ConstantlyFaceEnemy_IfVisible = true -- Should it only face the enemy if it's visible?
-ENT.ConstantlyFaceEnemy_IfAttacking = true  -- Should it face the enemy when attacking?
-ENT.ConstantlyFaceEnemy_Postures = "Moving" -- "Both" = Moving or standing | "Moving" = Only when moving | "Standing" = Only when standing
-
-ENT.RangeAttackSoundLevel = 100
+include( "noob_dev2323/madness_combat/grunt_range_script.lua" ) --include gore script
 
 -- Custom
 ENT.AAHW_NextRunT = 0
 ENT.MaxAmmo = 12
-ENT.CurrentAmmo = 12
 ENT.Reloading = false
 ENT.ReloadTime = 2.0 
 ENT.grunt_no_pain_animation = true
 ENT.grunt_hold_type = "pistol"
+
+ENT.NextRangeAttackTime = 0.5 --grunt time delay
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self.gib_type = "ok"

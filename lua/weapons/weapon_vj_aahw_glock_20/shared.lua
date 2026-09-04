@@ -9,14 +9,14 @@ SWEP.Instructions				= "Controls are like a regular weapon."
 SWEP.Category					= "madness combat"
 
 if CLIENT then
-SWEP.Slot						= 1 -- Which weapon slot you want your SWEP to be in? (1 2 3 4 5 6) 
-SWEP.SlotPos					= 1 -- Which part of that slot do you want the SWEP to be in? (1 2 3 4 5 6)
-SWEP.SwayScale 					= 4 -- Default is 1, The scale of the viewmodel sway
-SWEP.UseHands					= true
+    SWEP.Slot						= 1 -- Which weapon slot you want your SWEP to be in? (1 2 3 4 5 6) 
+    SWEP.SlotPos					= 1 -- Which part of that slot do you want the SWEP to be in? (1 2 3 4 5 6)
+    SWEP.SwayScale 					= 4 -- Default is 1, The scale of the viewmodel sway
+    SWEP.UseHands					= true
 end
 -- Main Settings ---------------------------------------------------------------------------------------------------------------------------------------------
 SWEP.MadeForNPCsOnly = false -- Is this weapon meant to be for NPCs only?
-SWEP.ViewModel					= "models/madness/weapons/c_glock20.mdl"
+SWEP.ViewModel					= "models/noob_dev2323/madness/weapons/c_glock20.mdl"
 SWEP.WorldModel = "models/noob_dev2323/madness/weapons/w_glock_20.mdl"
 SWEP.HoldType = "pistol"
 SWEP.HasReloadSound				= true -- Does it have a reload sound? Remember even if this is set to false, the animation sound will still play!
@@ -31,7 +31,7 @@ SWEP.NPC_TimeUntilFire = 0.5 -- How much time until the bullet/projectile is fir
 SWEP.NPC_CustomSpread = 1
 SWEP.NPC_HasSecondaryFire = false -- Can the weapon have a secondary fire?
 -- Primary Fire ---------------------------------------------------------------------------------------------------------------------------------------------
-SWEP.Primary.Damage = 10 -- Damage
+SWEP.Primary.Damage = 20 -- Damage
 SWEP.Primary.Force = 5 -- Force applied on the object the bullet hits
 SWEP.Primary.Delay				= 0.25 -- Time until it can shoot again
 SWEP.Primary.ClipSize = 15 -- Max amount of bullets per clip

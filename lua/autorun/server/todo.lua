@@ -3,7 +3,6 @@
 --nevada map
 --bullet defece
 --surfaceprop 
---make npc avoid crossrair
 --view model weapons
 --mask damege
 --zeds
@@ -13,4 +12,5 @@
 --grunt_suicidal_bomber sound
 --zombie eat corpse
 --foot step
---bleed
+--text on dead ragdoll
+--botle melee

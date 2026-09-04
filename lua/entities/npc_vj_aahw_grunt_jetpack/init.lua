@@ -33,12 +33,6 @@ ENT.LimitChaseDistance = true
 ENT.LimitChaseDistance_Max = "UseRangeDistance"
 ENT.LimitChaseDistance_Min = "UseRangeDistance"
 
-ENT.Weapon_UnarmedBehavior = false   
-ENT.Weapon_CanCrouchAttack = false  -- Can it crouch while firing a weapon?
-ENT.AnimTbl_WeaponAttackCrouch = false  -- Animations to play while firing a weapon in crouched position
-ENT.AnimTbl_WeaponAttack = ACT_IDLE_PISTOL -- Animations to play while firing a weapon
-ENT.AnimTbl_WeaponAttackGesture = ACT_RANGE_ATTACK1   -- Gesture animations to play while firing a weapon | false = Don't play an animation
-ENT.Weapon_CanMoveFire = true    -- Can it fire its weapon while it's moving
 
 ENT.MainSoundPitch = 100
 
@@ -56,7 +50,6 @@ ENT.grunt_no_pain_animation = true
 ENT.grunt_no_stun = true 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
-	self:Give("weapon_vj_aahw_mp5")
 	self.gib_type = "ok"
 	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_jetpack.mdl",self)
 		self.AlienC_FlyAnim_Forward  = self:GetSequenceActivity(self:LookupSequence("forward"))
