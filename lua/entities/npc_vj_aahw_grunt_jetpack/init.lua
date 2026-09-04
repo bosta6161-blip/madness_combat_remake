@@ -33,9 +33,6 @@ ENT.LimitChaseDistance = true
 ENT.LimitChaseDistance_Max = "UseRangeDistance"
 ENT.LimitChaseDistance_Min = "UseRangeDistance"
 
-
-
-
 ENT.Weapon_UnarmedBehavior = false   
 ENT.Weapon_CanCrouchAttack = false  -- Can it crouch while firing a weapon?
 ENT.AnimTbl_WeaponAttackCrouch = false  -- Animations to play while firing a weapon in crouched position
@@ -56,6 +53,7 @@ ENT.AlienC_FlyAnim_Down = 0
 
 ENT.is_madness_combat_npc = true 
 ENT.grunt_no_pain_animation = true
+ENT.grunt_no_stun = true 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self:Give("weapon_vj_aahw_mp5")

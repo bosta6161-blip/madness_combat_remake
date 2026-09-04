@@ -31,7 +31,6 @@ ENT.MeleeAttackAnimationAllowOtherTasks = true -- If set to true, the animation 
 ENT.MeleeAttackDistance = 100 -- How close does it have to be until it attacks?
 ENT.MeleeAttackDamageDistance = 120 -- How far does the damage go?
 ENT.TimeUntilMeleeAttackDamage = 0.5 -- This counted in seconds | This calculates the time until it hits something
-ENT.NextAnyAttackTime_Melee = 0	 -- How much time until it can use any attack again? | Counted in Seconds
 ENT.MeleeAttackDamage = 10
 ENT.HasExtraMeleeAttackSounds = true -- Set to true to use the extra melee attack sounds
 
@@ -138,7 +137,67 @@ function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
 		end
 	end
 end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnAcceptInput(key, activator, caller, data)
+	print(key)
+	if key == "event_emit step" then
+		self:FootStepSoundCode()
+	elseif key == "event_mattack both" then
+		self:MeleeAttackCode()
+	elseif key == "event_rattack" then
+ if self.Reloading then return end
 
+    if self.CurrentAmmo <= 0 then
+        self:StartReload()
+        return
+    end
+
+    local enemy = self:GetEnemy()
+    if not IsValid(enemy) then return end
+
+    local attID = self:LookupAttachment("shot")
+    if not attID or attID <= 0 then return end
+
+    local att = self:GetAttachment(attID)
+    if not att then return end
+
+    local bullet = {}
+    bullet.Num = 1
+    bullet.Src = att.Pos
+    bullet.Dir = (enemy:BodyTarget(att.Pos) - att.Pos):GetNormalized()
+    bullet.Spread = Vector(0.09, 0.09, 0.05)
+    bullet.Tracer = 1
+    bullet.TracerName = "Tracer"
+    bullet.Force = 4
+    bullet.Damage = 4
+
+    self:FireBullets(bullet)
+
+	VJ.EmitSound(self, "AAHW/shotgunshot.wav", 80, 100)
+
+    ParticleEffectAttach("vj_rifle_full", PATTACH_POINT_FOLLOW, self, attID)
+    self.CurrentAmmo = self.CurrentAmmo - 1
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+-- CUSTOM RELOAD COSMETIC THINGY
+function ENT:StartReload()
+    if self.Reloading then return end
+
+    self.Reloading = true
+        self.HasRangeAttack = false
+
+	VJ.EmitSound(self, "weapons/shotgun/shotgun_reload1.wav", 75, 100)
+	self:PlayAnim({"vjges_reload_mp5"}, true, false)
+
+    timer.Simple(self.ReloadTime, function()
+        if not IsValid(self) then return end
+
+        self.CurrentAmmo = self.MaxAmmo
+        self.Reloading = false
+        self.HasRangeAttack = true
+    end)
+end
 include( "noob_dev2323/madness_combat/grunt_gore_script.lua" ) --include gore script
 
 -- All functions and variables are located inside the base files. It can be found in the GitHub Repository: https://github.com/DrVrej/VJ-Base
