@@ -5,39 +5,17 @@ include("shared.lua")
 	No parts of this code or any of its contents may be reproduced, copied, modified or adapted,
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
-ENT.Model = "models/noob_dev2323/madness/npc/grunt_npc.mdl"
-ENT.StartHealth = 60
+ENT.StartHealth = 40
 ENT.SightAngle = 360
 ENT.HullType = HULL_HUMAN
 ENT.MovementType = VJ_MOVETYPE_AERIAL
 ENT.Aerial_FlyingSpeed_Calm = 400
 ENT.Aerial_FlyingSpeed_Alerted = 600
-ENT.ControllerParams = {
-	FirstP_Bone = "bip01 neck",
-	FirstP_Offset = Vector(10, 0, -3),
-}
----------------------------------------------------------------------------------------------------------------------------------------------
-ENT.Bleeds = true -- Can it bleed? Controls all bleeding related components such blood decal, particle, pool, etc.
-ENT.BloodColor = "red" -- Its blood type, this will determine the blood decal, particle, etc.
-ENT.HasBloodDecal = true -- Should it spawn a decal when damaged?
-ENT.BloodColor = VJ.BLOOD_COLOR_RED
-ENT.BloodDecal = {"VJ_AAWH_GRUNT_BLOOD"}
-ENT.HasBloodPool = false  -- Should a blood pool spawn by its corpse?
-ENT.ConstantlyFaceEnemy = true
-ENT.HasMeleeAttack = false
 
-ENT.HasRangeAttack = false 
+include( "noob_dev2323/madness_combat/grunt_range_script.lua" ) --include gore script
 
-
-ENT.LimitChaseDistance = true
-ENT.LimitChaseDistance_Max = "UseRangeDistance"
-ENT.LimitChaseDistance_Min = "UseRangeDistance"
-
-
-ENT.MainSoundPitch = 100
 
 -- Custom
-
 ENT.AlienC_FlyAnim_Forward = 0
 ENT.AlienC_FlyAnim_Backward = 0
 ENT.AlienC_FlyAnim_Right = 0
@@ -48,11 +26,29 @@ ENT.AlienC_FlyAnim_Down = 0
 ENT.is_madness_combat_npc = true 
 ENT.grunt_no_pain_animation = true
 ENT.grunt_no_stun = true 
+
+ENT.AAHW_NextRunT = 0
+ENT.MaxAmmo = 45
+ENT.Reloading = false
+ENT.ReloadTime = 2.0 
+ENT.grunt_no_pain_animation = true
+ENT.grunt_hold_type = "pistol"
+
+ENT.madness_weapon_status = {
+    damege = 3,
+    force = 5,
+    amount = 1,
+    spread = Vector(0.09, 0.09, 0.09)
+}
+ENT.RangeDistance = 2000 -- This is how far away it can shoot
+ENT.NextRangeAttackTime = 0 --grunt time delay
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self.gib_type = "ok"
 	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_jetpack.mdl",self)
-		self.AlienC_FlyAnim_Forward  = self:GetSequenceActivity(self:LookupSequence("forward"))
+	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_mp5.mdl",self)
+    self.CurrentAmmo = 45
+	self.AlienC_FlyAnim_Forward  = self:GetSequenceActivity(self:LookupSequence("forward"))
 	self.AlienC_FlyAnim_Backward  = self:GetSequenceActivity(self:LookupSequence("backward"))
 	self.AlienC_FlyAnim_Right  = self:GetSequenceActivity(self:LookupSequence("right"))
 	self.AlienC_FlyAnim_Left  = self:GetSequenceActivity(self:LookupSequence("left"))

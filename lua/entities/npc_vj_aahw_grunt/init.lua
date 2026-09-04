@@ -140,52 +140,47 @@ function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
 end
 function ENT:EQUIP_A_MELEE_WEAPON()
 	self:VJ_ACT_PLAYACTIVITY("vjges_melee_attack_02", false, 0, true, 0)
+
 	local melee_weapons = {
-		[1] ="models/noob_dev2323/madness/weapons/w_crowbar.mdl",
-		[2] ="models/noob_dev2323/madness/weapons/w_bowieKnife.mdl",
-		[3] ="models/noob_dev2323/madness/weapons/w_iron_sword.mdl",
-		[4] ="models/noob_dev2323/madness/weapons/w_bat.mdl",
-		[5] ="models/noob_dev2323/madness/weapons/w_baton.mdl",
-		[6] ="models/noob_dev2323/madness/weapons/w_iron_pipe.mdl",
-		[7] ="models/noob_dev2323/madness/weapons/w_hammer.mdl",
-		[8] ="models/noob_dev2323/madness/weapons/w_megachette.mdl"
-	} 
-	melee_model_type = {
-		["models/noob_dev2323/madness/weapons/w_crowbar.mdl"] = "blunt",
-		["models/noob_dev2323/madness/weapons/w_bowieKnife.mdl"] = "stab",
-		["models/noob_dev2323/madness/weapons/w_iron_sword.mdl"] = "stab",
-		["models/noob_dev2323/madness/weapons/w_bat.mdl"] = "blunt",
-		["models/noob_dev2323/madness/weapons/w_baton.mdl"] = "blunt",
-		["models/noob_dev2323/madness/weapons/w_iron_pipe.mdl"] = "blunt",
-		["models/noob_dev2323/madness/weapons/w_hammer.mdl"] = "blunt",
-		["models/noob_dev2323/madness/weapons/w_megachette.mdl"] = "stab"
-	} 
-	self.MeleeAttackDamage = 35 --set grunt damege
-	local melee_weapon_model = melee_weapons[math.random(1, #melee_weapons)]
+		{"models/noob_dev2323/madness/weapons/w_crowbar.mdl", "blunt"},
+		{"models/noob_dev2323/madness/weapons/w_bowieKnife.mdl", "stab"},
+		{"models/noob_dev2323/madness/weapons/w_iron_sword.mdl", "stab"},
+		{"models/noob_dev2323/madness/weapons/w_bat.mdl", "blunt"},
+		{"models/noob_dev2323/madness/weapons/w_baton.mdl", "blunt"},
+		{"models/noob_dev2323/madness/weapons/w_iron_pipe.mdl", "blunt"},
+		{"models/noob_dev2323/madness/weapons/w_hammer.mdl", "blunt"},
+		{"models/noob_dev2323/madness/weapons/w_megachette.mdl", "stab"}
+	}
 
-    if melee_model_type[melee_weapon_model] then
-        if melee_model_type[melee_weapon_model] == "stab" then
-			self.melee_model = melee_weapon_model
-			self.MeleeAttackDamageType = DMG_SLASH
-			self.AnimTbl_MeleeAttack = {"vjges_stab","vjges_melee_attack_01","vjges_melee_attack_02"}
-			self.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/slash_01.wav","noob_dev2323/madness/melee/slash_02.wav","noob_dev2323/madness/melee/slash_03.wav","noob_dev2323/madness/melee/slash_04.wav"}
-			
-			self.MeleeAttackBleedEnemy = true -- Should it bleed enemies it hits?
-			self.MeleeAttackBleedEnemyChance = 3 -- Chance that the enemy bleeds | 1 = always
-			self.MeleeAttackBleedEnemyDamage = 1 -- How much damage per repetition
-			self.MeleeAttackBleedEnemyTime = 1 -- How much time until the next repetition?
-			self.MeleeAttackBleedEnemyReps = 4 -- How many repetitions?
-		elseif melee_model_type[melee_weapon_model] == "blunt" then
-			self.MeleeAttackDamage = 25
-			self.melee_model = melee_weapon_model
-			self.MeleeAttackDamageType = DMG_CLUB
-			self.AnimTbl_MeleeAttack = {"vjges_melee_attack_01","vjges_melee_attack_02"}
-			self.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/BigHit-1.wav","noob_dev2323/madness/melee/BigHit-2.wav","noob_dev2323/madness/melee/BigHit.wav"}
-		end
-    end
+	local weapon = melee_weapons[math.random(#melee_weapons)]
+	local melee_weapon_model = weapon[1]
+	local weapon_type = weapon[2]
 
-	bonemerge_prop_on_npc(self.melee_model,self)
-end
+	self.MeleeAttackDamage = 35
+	self.melee_model = melee_weapon_model
+
+	if weapon_type == "stab" then
+		self.MeleeAttackDamageType = DMG_SLASH
+		self.AnimTbl_MeleeAttack = {"vjges_stab","vjges_melee_attack_01","vjges_melee_attack_02"}
+
+		self.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/slash_01.wav","noob_dev2323/madness/melee/slash_02.wav","noob_dev2323/madness/melee/slash_03.wav","noob_dev2323/madness/melee/slash_04.wav"}
+
+		self.MeleeAttackBleedEnemy = true
+		self.MeleeAttackBleedEnemyChance = 3
+		self.MeleeAttackBleedEnemyDamage = 1
+		self.MeleeAttackBleedEnemyTime = 1
+		self.MeleeAttackBleedEnemyReps = 4
+
+	elseif weapon_type == "blunt" then
+		self.MeleeAttackDamage = 25
+		self.MeleeAttackDamageType = DMG_CLUB
+
+		self.AnimTbl_MeleeAttack = {"vjges_melee_attack_01","vjges_melee_attack_02"}
+		self.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/BigHit-1.wav","noob_dev2323/madness/melee/BigHit-2.wav","noob_dev2323/madness/melee/BigHit.wav"}
+	end
+
+	bonemerge_prop_on_npc(self.melee_model, self)
+end 
 
 include( "noob_dev2323/madness_combat/grunt_guns_script.lua" ) --include gore script
 include( "noob_dev2323/madness_combat/grunt_gore_script.lua" ) --include gore script

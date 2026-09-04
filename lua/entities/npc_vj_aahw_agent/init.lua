@@ -15,6 +15,13 @@ ENT.grunt_no_pain_animation = true
 ENT.grunt_hold_type = "pistol"
 
 ENT.NextRangeAttackTime = 0.5 --grunt time delay
+
+ENT.madness_weapon_status = {
+    damege = 5,
+    force = 10,
+    amount = 1,
+    spread = Vector(0.09, 0.09, 0.05)
+}
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self.gib_type = "ok"

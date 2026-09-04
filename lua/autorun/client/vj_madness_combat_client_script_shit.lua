@@ -64,7 +64,7 @@ end )
 function madness_combat_vr_particles(ent)
     if ent:IsValid() then 
         local boneCount = ent:GetBoneCount()
-        timer.Create( "limb_bone_timer"..ent:EntIndex(),0.1,100, function() 
+        timer.Create( "limb_bone_timer"..ent:EntIndex(),0.1,25, function() 
             if ent:IsValid() then
                 for i = 0, boneCount - 1 do
                     local pos = ent:GetBonePosition(i+math.random(-5,5),math.random(-5,5),math.random(-5,5))

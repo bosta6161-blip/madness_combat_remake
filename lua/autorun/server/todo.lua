@@ -3,7 +3,6 @@
 --nevada map
 --bullet defece
 --surfaceprop 
---view model weapons
 --mask damege
 --zeds
 --player models
@@ -14,3 +13,5 @@
 --foot step
 --text on dead ragdoll
 --botle melee
+--zombie range atack
+--hats

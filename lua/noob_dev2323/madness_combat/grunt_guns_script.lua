@@ -1,12 +1,11 @@
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnAcceptInput(key, activator, caller, data)
-	print(key)
 	if key == "event_emit step" then
 		self:FootStepSoundCode()
 	elseif key == "event_mattack both" then
 		self:MeleeAttackCode()
 	elseif key == "event_rattack" then
- if self.Reloading then return end
+    if self.Reloading then return end
 
     if self.CurrentAmmo <= 0 then
         self:StartReload()
@@ -23,14 +22,15 @@ function ENT:CustomOnAcceptInput(key, activator, caller, data)
     if not att then return end
 
     local bullet = {}
-    bullet.Num = 1
+    bullet.Num = self.madness_weapon_status.amount
     bullet.Src = att.Pos
     bullet.Dir = (enemy:BodyTarget(att.Pos) - att.Pos):GetNormalized()
-    bullet.Spread = Vector(0.09, 0.09, 0.05)
+    bullet.Spread = self.madness_weapon_status.spread
     bullet.Tracer = 1
     bullet.TracerName = "Tracer"
-    bullet.Force = 4
-    bullet.Damage = 4
+    bullet.Force = self.madness_weapon_status.force
+    bullet.Damage = self.madness_weapon_status.damege
+	bullet.Attacker = self
 
     self:FireBullets(bullet)
 
@@ -46,7 +46,7 @@ function ENT:StartReload()
     if self.Reloading then return end
 
     self.Reloading = true
-        self.HasRangeAttack = false
+    self.HasRangeAttack = false
 
 	VJ.EmitSound(self, "weapons/shotgun/shotgun_reload1.wav", 75, 100)
 	self:PlayAnim({"vjges_reload_mp5"}, true, false)
