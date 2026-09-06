@@ -46,6 +46,15 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 		local colide = corpseEnt:GetPhysicsObjectNum( bone )
 		colide:EnableCollisions(false)
 	end
+	if self.is_yellow_blood == true then
+		for i = 0, corpseEnt:GetPhysicsObjectCount() - 1 do
+			local phys = corpseEnt:GetPhysicsObjectNum(i)
+
+			if IsValid(phys) then
+				phys:SetMaterial("alienflesh")
+			end
+		end
+	end
 	if self.gib_type == "head_damege" then
 		corpseEnt:SetBodygroup(1,self.head_damege_type)
 		self:EmitSound("noob_dev2323/madness/grunt/die.wav", 500, 100, 6, CHAN_AUTO ) -- Same as below

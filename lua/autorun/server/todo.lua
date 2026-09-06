@@ -15,3 +15,15 @@
 --botle melee
 --zombie range atack
 --hats
+--NPC TALK
+--INSECT ON ZOMBIES
+--COPY ANIMATIONS
+
+--need to release
+--zeds
+--guard
+--player guns
+--jeetpak
+--triki
+--more gore damege
+--modo wave talves
