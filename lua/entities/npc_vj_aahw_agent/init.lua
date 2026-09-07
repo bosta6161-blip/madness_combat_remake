@@ -30,28 +30,3 @@ function ENT:CustomOnInitialize()
 	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_glock_20.mdl",self)
     self.CurrentAmmo = 12
 end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnThink_AIEnabled()
-    if self.VJ_IsBeingControlled or self.IsGuard or self.Dead then return end
-
--- should reload the moment there is no enemy or killed the enemy
-    local enemy = self:GetEnemy()
-
-    if not IsValid(enemy) then
-        if not self.Reloading and self.CurrentAmmo < self.MaxAmmo then
-            self:StartReload()
-        end
-    end
-
--- Movement
-    if IsValid(enemy) and CurTime() > self.AAHW_NextRunT then
-        timer.Simple(math.Rand(0.2, 0.5), function() 
-            if IsValid(self) && !self:IsMoving() && !self.Dead then
-                self:VJ_TASK_COVER_FROM_ENEMY("TASK_RUN_PATH")
-            end
-        end)
-
-        self.AAHW_NextRunT = CurTime() + math.Rand(1.5, 2.5)
-    end
-end
-

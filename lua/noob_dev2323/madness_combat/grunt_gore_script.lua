@@ -67,12 +67,82 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 	if self.melee_model then
 		self:CreateGibEntity("prop_physics",self.melee_model,{Pos=self:LocalToWorld(Vector(-50,20,0)),Ang=self:GetAngles()+Angle(90,0,0),Vel=vel})
 	end
-	if self.gib_type == "head_less" and not self.head_sliced then
-		corpseEnt.Head_gibbed = true 
-		if self.is_madness_VR == false then
-			corpseEnt:SetBodygroup(2, 0)
-			corpseEnt:SetBodygroup(1, 1)
-			sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
+	if self.gib_type == "head_less" then
+		local yellow = self.is_yellow_blood
+		local data = yellow and {
+			scale = 15,
+			color = Color(229, 255, 0),
+			particle = "qblood_advisor_shrapnel_impact",
+			decal = "VJ_AAWH_GRUNT_YELLOW_BLOOD",
+			gibs = {
+				{"gib03.mdl", "2"},
+				{"gib04.mdl", "5"},
+				{"gib03.mdl", "head_gib"},
+				{"gib04.mdl", "head_gib"},
+				{"gib03.mdl", "head"}
+			}
+		} or {
+			scale = 30,
+			color = Color(130, 19, 10),
+			particle = "blood_advisor_puncture_withdraw",
+			decal = "VJ_AAWH_GRUNT_BLOOD",
+			gibs = {
+				{"head_chunk2.mdl", "2"},
+				{"head_chunk1.mdl", "5"},
+				{"head_chunk6.mdl", "4"},
+				{"head_chunk4.mdl", "head_gib"},
+				{"head_chunk5.mdl", "head_gib"},
+				{"head_chunk3.mdl", "head"}
+			}
+		}
+
+		if self.HasGibOnDeathEffects and not self.isVR then
+			local att = corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head_gib"))
+
+			local blood = EffectData()
+			blood:SetOrigin(att.Pos)
+			blood:SetScale(data.scale)
+			blood:SetColor(VJ_Color2Byte(data.color))
+			util.Effect("VJ_Blood1", blood)
+
+			local particle = ents.Create("info_particle_system")
+			local head = corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head"))
+
+			particle:SetKeyValue("effect_name", data.particle)
+			particle:SetPos(head.Pos)
+			particle:SetAngles(head.Ang)
+			particle:SetParent(corpseEnt)
+			particle:Fire("SetParentAttachment", "head")
+			particle:Spawn()
+			particle:Activate()
+			particle:Fire("Start", "", 0)
+			particle:Fire("Kill", "", 7)
 		end
+
+		corpseEnt.Head_gibbed = true
+
+		if not self.isVR then
+
+			for _, gib in ipairs(data.gibs) do
+				local vel = Vector(math.Rand(-200, 200), math.Rand(-300, 300), math.Rand(200, 200))+Vector(dmginfo:GetDamageForce()/4)
+				local att = self:GetAttachment(self:LookupAttachment(gib[2]))
+
+				self:CreateGibEntity(
+					"obj_vj_gib",
+					"models/noob_dev2323/madness/gibs/" .. gib[1],
+					{
+						CollisionDecal = data.decal,
+						Pos = att.Pos,
+						Ang = self:GetAngles(),
+						Vel = vel
+					}
+				)
+			end
+		end
+
+		corpseEnt:SetBodygroup(2, 0)
+		corpseEnt:SetBodygroup(1, 1)
+
+		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1, 5) .. ".wav",corpseEnt:GetPos(),75,100,1)
 	end
 end

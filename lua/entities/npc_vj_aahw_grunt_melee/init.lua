@@ -11,6 +11,7 @@ ENT.MeleeAttackDistance = 130 -- How close does it have to be until it attacks?
 
 ENT.grunt_no_pain_animation = true
 ENT.grunt_no_stun = true 
+ENT.grunt_is_melee = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self.gib_type = "ok"

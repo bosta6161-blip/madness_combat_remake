@@ -104,39 +104,47 @@ function ENT:TranslateActivity(act)
 			return ACT_IDLE_PISTOL -- your activity here
 		end
 	end
-
+	if self.grunt_hold_type == "shotgun" then --if is hurt swap animations
+		if act == ACT_WALK then
+			return ACT_WALK_PISTOL -- your activity here
+		elseif act == ACT_RUN then
+			return ACT_RUN_PISTOL
+		elseif act == ACT_IDLE then
+			return self:GetSequenceActivity(self:LookupSequence("idle_shotgun")) -- your activity here
+		end
+	end
     return act
 end
 
 function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
-	if self:Health() <= (self:GetMaxHealth() / 2.2) and self.is_madness_hurt ~= true and self.grunt_no_pain_animation == false then
-		self.is_madness_hurt = true
-		self.NextAnyAttackTime_Melee = 0.5	 -- How much time until it can use any attack again? | Counted in Seconds
-		self.MeleeAttackDamage = 7
-		self.AnimTbl_MeleeAttack = {"vjges_punch_hunt_01","vjges_punch_hunt_02"} -- Melee Attack Animations
-	end
-	if self.grunt_no_stun == false then
-		if ( hitgroup == HITGROUP_LEFTLEG ) or ( hitgroup == HITGROUP_RIGHTLEG ) and self:GetActivity() == ACT_RUN and math.random(1, 2) == 1 and dmginfo:GetDamage() >= 40 and self.CanFlinch == 1 then
-			self.grunt_NextStumbleT = CurTime() + 3
-			self:VJ_ACT_PLAYACTIVITY("run_stumble_01",true,2)
-			self.CanFlinch = 0
-			timer.Simple( 3, function()
-				if IsValid(self) then
-					self.CanFlinch = 1
-				end
-			end )
-		end	
-		if ( hitgroup == HITGROUP_CHEST ) or ( hitgroup == HITGROUP_STOMACH ) and math.random(1, 3) == 1 and dmginfo:GetDamage() >= 40 and self.CanFlinch == 1 then
-			self.grunt_NextStumbleT = CurTime() + 3
-			self:VJ_ACT_PLAYACTIVITY("stumble_back",true,2)
-			self.CanFlinch = 0
-			timer.Simple( 3, function()
-				if IsValid(self) then
-					self.CanFlinch = 1
-				end
-			end )
-		end
-	end
+    if self:Health() <= (self:GetMaxHealth() / 2.2) and self.is_madness_hurt ~= true and self.grunt_no_pain_animation == false then
+        self.is_madness_hurt = true
+        self.NextAnyAttackTime_Melee = 0.5     -- How much time until it can use any attack again? | Counted in Seconds
+        self.MeleeAttackDamage = 7
+        self.AnimTbl_MeleeAttack = {"vjges_punch_hunt_01","vjges_punch_hunt_02"} -- Melee Attack Animations
+    end
+    if self.grunt_no_stun == false then
+        if ( hitgroup == HITGROUP_LEFTLEG ) or ( hitgroup == HITGROUP_RIGHTLEG ) and self:GetActivity() == ACT_RUN and math.random(1, 2) == 1 and dmginfo:GetDamage() >= 40 and self.CanFlinch == 1 then
+            self.grunt_NextStumbleT = CurTime() + 3
+            self:VJ_ACT_PLAYACTIVITY("run_stumble_01",true,2)
+            self.CanFlinch = 0
+            timer.Simple( 3, function()
+                if IsValid(self) then
+                    self.CanFlinch = 1
+                end
+            end )
+        end
+        if ( hitgroup == HITGROUP_CHEST ) or ( hitgroup == HITGROUP_STOMACH ) and math.random(1, 3) == 1 and dmginfo:GetDamage() >= 40 and self.CanFlinch == 1 then
+            self.grunt_NextStumbleT = CurTime() + 3
+            self:VJ_ACT_PLAYACTIVITY("stumble_back",true,2)
+            self.CanFlinch = 0
+            timer.Simple( 3, function()
+                if IsValid(self) then
+                    self.CanFlinch = 1
+                end
+            end )
+        end
+    end
 end
 function ENT:EQUIP_A_MELEE_WEAPON()
 	self:VJ_ACT_PLAYACTIVITY("vjges_melee_attack_02", false, 0, true, 0)
@@ -181,7 +189,29 @@ function ENT:EQUIP_A_MELEE_WEAPON()
 
 	bonemerge_prop_on_npc(self.melee_model, self)
 end 
+function ENT:CustomOnThink_AIEnabled()
+    if self.VJ_IsBeingControlled or self.IsGuard or self.Dead or not self.madness_weapon_status then return end
 
+-- should reload the moment there is no enemy or killed the enemy
+    local enemy = self:GetEnemy()
+
+    if not IsValid(enemy) then
+        if not self.Reloading and self.CurrentAmmo < self.MaxAmmo then
+            self:StartReload()
+        end
+    end
+
+-- Movement
+    if IsValid(enemy) and CurTime() > self.AAHW_NextRunT then
+        timer.Simple(math.Rand(0.2, 0.5), function() 
+            if IsValid(self) && !self:IsMoving() && !self.Dead then
+                self:VJ_TASK_COVER_FROM_ENEMY("TASK_RUN_PATH")
+            end
+        end)
+
+        self.AAHW_NextRunT = CurTime() + math.Rand(1.5, 2.5)
+    end
+end
 include( "noob_dev2323/madness_combat/grunt_guns_script.lua" ) --include gore script
 include( "noob_dev2323/madness_combat/grunt_gore_script.lua" ) --include gore script
 

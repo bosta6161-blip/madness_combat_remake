@@ -82,6 +82,9 @@ hook.Add("EntityTakeDamage", "EntityMadness_ent_TakeDamage", function(target, dm
 		end 
 	end
 end)
+
+
+
 local gibs_table_Red = {"models/noob_dev2323/madness/gibs/gib01.mdl","models/noob_dev2323/madness/gibs/gib02.mdl","models/noob_dev2323/madness/gibs/gib01.mdl","models/noob_dev2323/madness/gibs/gib02.mdl","models/noob_dev2323/madness/gibs/gib01.mdl","models/noob_dev2323/madness/gibs/gib02.mdl"}
 local gibs_table_yellow = {"models/noob_dev2323/madness/gibs/gib03.mdl","models/noob_dev2323/madness/gibs/gib03.mdl","models/noob_dev2323/madness/gibs/gib04.mdl","models/noob_dev2323/madness/gibs/gib04.mdl","models/noob_dev2323/madness/gibs/gib04.mdl","models/noob_dev2323/madness/gibs/gib03.mdl"}
 function madness_ragdoll_gib(target,dmg_force)

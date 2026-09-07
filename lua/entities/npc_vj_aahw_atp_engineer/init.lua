@@ -24,6 +24,29 @@ ENT.GrenadeAttackBone = "ValveBiped.Bip01_R_Hand" -- The bone that the grenade w
 	-- ====== Animation ====== --
 ENT.AnimTbl_GrenadeAttack = "punch01" -- Animations to play when it throws a grenade | false = Don't play an animation
 ENT.GrenadeAttackAnimationFaceEnemy = true -- Should it face the enemy while playing an grenade attack animation?
+
+include( "noob_dev2323/madness_combat/grunt_range_script.lua" ) --include gore script
+ENT.RangeDistance = 300 -- This is how far away it can shoot
+
+-- Custom
+ENT.AAHW_NextRunT = 0
+ENT.MaxAmmo = 6
+ENT.Reloading = false
+ENT.ReloadTime = 2.0 
+ENT.grunt_no_pain_animation = true
+ENT.grunt_hold_type = "pistol"
+
+
+ENT.grunt_no_pain_animation = true
+ENT.grunt_hold_type = "shotgun"
+ENT.NextRangeAttackTime = 2 --grunt time delay
+ENT.madness_weapon_status = {
+    damege = 3,
+    force = 25,
+    amount = 12,
+    spread = Vector(0.06,0.06,0.06)
+}
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self.totalDamage = {}
@@ -33,6 +56,8 @@ function ENT:CustomOnInitialize()
 	self.protect = true
 	self:SetBodygroup(2, 3)
 	self:SetSkin(2)
+	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_shotgun.mdl",self)
+	self.CurrentAmmo = 6
 end
 function ENT:CustomOnTakeDamage_BeforeImmuneChecks(dmginfo, hitgroup)
 	local damageForce = dmginfo:GetDamageForce():Length()
@@ -40,7 +65,7 @@ function ENT:CustomOnTakeDamage_BeforeImmuneChecks(dmginfo, hitgroup)
 	if self.protect == true and damageForce < 15000 then
 		if hitgroup == 13 or hitgroup == 16 or hitgroup == 17 then
      		self.Bleeds = false -- Disable bleeding temporarily when shot at the helmet
-			local dmg = dmginfo:GetDamage()/2.5
+			local dmg = dmginfo:GetDamage()/5
 			dmginfo:SetDamage(dmg)
 		end
 	end
