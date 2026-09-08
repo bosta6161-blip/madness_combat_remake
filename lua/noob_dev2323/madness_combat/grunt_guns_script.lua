@@ -34,7 +34,11 @@ function ENT:CustomOnAcceptInput(key, activator, caller, data)
 
     self:FireBullets(bullet)
 
-	VJ.EmitSound(self, "weapons/glock.wav", 80, 100)
+    local gun_sound = "weapons/glock.wav"
+    if self.madness_weapon_status.custom_gun_sound then
+        gun_sound = self.madness_weapon_status.custom_gun_sound
+    end
+	VJ.EmitSound(self,gun_sound, 80, 100)
 
     ParticleEffectAttach("vj_rifle_full", PATTACH_POINT_FOLLOW, self, attID)
     self.CurrentAmmo = self.CurrentAmmo - 1
@@ -49,7 +53,7 @@ function ENT:StartReload()
     self.HasRangeAttack = false
 
 	VJ.EmitSound(self, "weapons/shotgun/shotgun_reload1.wav", 75, 100)
-	self:PlayAnim({"vjges_reload_mp5"}, true, false)
+	self:PlayAnim({"vjges_reload_pistol"}, true, false)
 
     timer.Simple(self.ReloadTime, function()
         if not IsValid(self) then return end

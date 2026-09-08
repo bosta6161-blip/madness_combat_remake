@@ -1,6 +1,6 @@
 ENT.Base 		= "npc_vj_creature_base"
 ENT.Type 		= "ai"
-ENT.PrintName 		= "npc_vj_aahw_zombie_grunt"
+ENT.PrintName 		= "zombie grunt"
 ENT.Author 		= "noob_dev2323"
 ENT.Contact 		= "http://steamcommunity.com/groups/vrejgaming"
 ENT.Category		= "madness combat remake"

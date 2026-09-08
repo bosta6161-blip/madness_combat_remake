@@ -34,16 +34,17 @@ ENT.TimeUntilMeleeAttackDamage = 0.5 -- This counted in seconds | This calculate
 ENT.MeleeAttackDamage = 10
 ENT.HasExtraMeleeAttackSounds = true -- Set to true to use the extra melee attack sounds
 
+
+
 ENT.AnimTbl_Flinch = {"vjges_flinch"} -- If it uses normal based animation, use this
 ENT.CanFlinch = 1 -- 0 = Don't flinch | 1 = Flinch at any damage | 2 = Flinch only from certain damages
-ENT.FlinchChance = 1 -- Chance of it flinching from 1 to x | 1 will make it always flinch
+ENT.FlinchChance = 2 -- Chance of it flinching from 1 to x | 1 will make it always flinch
 	-- To let the base automatically detect the animation duration, set this to false:
 ENT.NextMoveAfterFlinchTime = false -- How much time until it can move, attack, etc.
 ENT.NextFlinchTime = 0.5 -- How much time until it can flinch again?
 ENT.FlinchAnimationDecreaseLengthAmount = 0 -- This will decrease the time it can move, attack, etc. | Use it to fix animation pauses after it finished the flinch animation
 ENT.HitGroupFlinching_DefaultWhenNotHit = true -- If it uses hitgroup flinching, should it do the regular flinch if it doesn't hit any of the specified hitgroups?
-ENT.HitGroupFlinching_Values = nil -- EXAMPLES: {{HitGroup = {HITGROUP_HEAD}, Animation = {ACT_FLINCH_HEAD}}, {HitGroup = {HITGROUP_LEFTARM}, Animation = {ACT_FLINCH_LEFTARM}}, {HitGroup = {HITGROUP_RIGHTARM}, Animation = {ACT_FLINCH_RIGHTARM}}, {HitGroup = {HITGROUP_LEFTLEG}, Animation = {ACT_FLINCH_LEFTLEG}}, {HitGroup = {HITGROUP_RIGHTLEG}, Animation = {ACT_FLINCH_RIGHTLEG}}}
-
+ENT.HitGroupFlinching_Values = {{HitGroup = {HITGROUP_STOMACH}, Animation = {ACT_FLINCH_CHEST}},{HitGroup = {HITGROUP_CHEST}, Animation = {ACT_FLINCH_CHEST}},{HitGroup = {HITGROUP_LEFTLEG}, Animation = {ACT_FLINCH_STOMACH}},{HitGroup = {HITGROUP_RIGHTLEG}, Animation = {ACT_FLINCH_STOMACH}}} -- EXAMPLES: {{HitGroup = {HITGROUP_HEAD}, Animation = {ACT_FLINCH_HEAD}}, {HitGroup = {HITGROUP_LEFTARM}, Animation = {ACT_FLINCH_LEFTARM}}, {HitGroup = {HITGROUP_RIGHTARM}, Animation = {ACT_FLINCH_RIGHTARM}}, {HitGroup = {HITGROUP_LEFTLEG}, Animation = {ACT_FLINCH_LEFTLEG}}, {HitGroup = {HITGROUP_RIGHTLEG}, Animation = {ACT_FLINCH_RIGHTLEG}}}
 ENT.HasSounds = true -- Put to false to disable ALL sound
 ENT.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/Punch1.wav","noob_dev2323/madness/melee/Punch2.wav","noob_dev2323/madness/melee/Punch3.wav","noob_dev2323/madness/melee/Punch4.wav","noob_dev2323/madness/melee/Punch5.wav"}
 ENT.SoundTbl_BeforeMeleeAttack = {"noob_dev2323/madness/grunt/Grunt.wav","noob_dev2323/madness/grunt/Grunt-1.wav","noob_dev2323/madness/grunt/Grunt-2.wav","noob_dev2323/madness/grunt/Grunt-3.wav","noob_dev2323/madness/grunt/Grunt-4.wav","noob_dev2323/madness/grunt/Grunt-5.wav","noob_dev2323/madness/grunt/Grunt-6.wav","noob_dev2323/madness/grunt/Grunt-7.wav","noob_dev2323/madness/grunt/Grunt-8.wav"}
@@ -106,9 +107,9 @@ function ENT:TranslateActivity(act)
 	end
 	if self.grunt_hold_type == "shotgun" then --if is hurt swap animations
 		if act == ACT_WALK then
-			return ACT_WALK_PISTOL -- your activity here
+			return ACT_HL2MP_WALK_SHOTGUN -- your activity here
 		elseif act == ACT_RUN then
-			return ACT_RUN_PISTOL
+			return ACT_HL2MP_RUN_SHOTGUN
 		elseif act == ACT_IDLE then
 			return self:GetSequenceActivity(self:LookupSequence("idle_shotgun")) -- your activity here
 		end
@@ -123,28 +124,7 @@ function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
         self.MeleeAttackDamage = 7
         self.AnimTbl_MeleeAttack = {"vjges_punch_hunt_01","vjges_punch_hunt_02"} -- Melee Attack Animations
     end
-    if self.grunt_no_stun == false then
-        if ( hitgroup == HITGROUP_LEFTLEG ) or ( hitgroup == HITGROUP_RIGHTLEG ) and self:GetActivity() == ACT_RUN and math.random(1, 2) == 1 and dmginfo:GetDamage() >= 40 and self.CanFlinch == 1 then
-            self.grunt_NextStumbleT = CurTime() + 3
-            self:VJ_ACT_PLAYACTIVITY("run_stumble_01",true,2)
-            self.CanFlinch = 0
-            timer.Simple( 3, function()
-                if IsValid(self) then
-                    self.CanFlinch = 1
-                end
-            end )
-        end
-        if ( hitgroup == HITGROUP_CHEST ) or ( hitgroup == HITGROUP_STOMACH ) and math.random(1, 3) == 1 and dmginfo:GetDamage() >= 40 and self.CanFlinch == 1 then
-            self.grunt_NextStumbleT = CurTime() + 3
-            self:VJ_ACT_PLAYACTIVITY("stumble_back",true,2)
-            self.CanFlinch = 0
-            timer.Simple( 3, function()
-                if IsValid(self) then
-                    self.CanFlinch = 1
-                end
-            end )
-        end
-    end
+
 end
 function ENT:EQUIP_A_MELEE_WEAPON()
 	self:VJ_ACT_PLAYACTIVITY("vjges_melee_attack_02", false, 0, true, 0)

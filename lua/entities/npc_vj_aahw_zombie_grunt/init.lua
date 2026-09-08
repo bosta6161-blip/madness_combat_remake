@@ -63,10 +63,7 @@ ENT.AnimTbl_WeaponAttackGesture = ACT_RANGE_ATTACK1   -- Gesture animations to p
 ENT.Weapon_CanMoveFire = true    -- Can it fire its weapon while it's moving
 
 -----------------------------------custom---------------------------
-ENT.is_madness_VR = false 
 ENT.is_madness_combat_npc = true 
-ENT.grunt_NextStumbleT = CurTime() + 3
-ENT.grunt_NextText = CurTime() + 3
 ENT.is_madness_hurt = false
 ENT.grunt_status = {
 	life = 40,
@@ -81,44 +78,7 @@ ENT.madness_head_damege_table = {
 function ENT:CustomOnInitialize()
 	self.madness_gib_type = "ok"
 end
-function ENT:OnAlert(ent) 
-	local dotext = math.random(1,3)
-	if dotext < 3 then
-		if CurTime() > self.grunt_NextText then
-			self.grunt_NextText = CurTime() + 3
-			madness_combat_snpc_doText(self,table.Random( madness_npc_text ))	
-		end
-	end
-end
-function ENT:TranslateActivity(act)
-	if self.is_madness_hurt == true then --if is hurt swap animations
-		if act == ACT_WALK then
-			return ACT_WALK_HURT -- your activity here
-		elseif act == ACT_RUN then
-			return ACT_RUN_HURT -- your activity here
-		elseif act == ACT_IDLE then
-			return self:GetSequenceActivity(self:LookupSequence("idle_hunt")) -- your activity here
-		end
-	end
 
-    return act
-end
-function ENT:SetAnimationTranslations(wepHoldType)
-	print(wepHoldType)
-    if wepHoldType == "pistol" then ---the holdtype for the hatemace and other 2 handed weps
-		self.AnimationTranslations[ACT_IDLE]        = ACT_IDLE_PISTOL
-        self.AnimationTranslations[ACT_WALK]        = ACT_WALK_PISTOL
-        self.AnimationTranslations[ACT_RUN]         = ACT_RUN_PISTOL
-        self.AnimationTranslations[ACT_IDLE_ANGRY]  = ACT_IDLE_PISTOL
-        self.AnimationTranslations[ACT_WALK_AIM]    = ACT_WALK_PISTOL
-        self.AnimationTranslations[ACT_RUN_AIM]     = ACT_RUN_PISTOL
-		--self.AnimationTranslations[ACT_JUMP] 		= ACT_HL2MP_JUMP_FIST
-		--self.AnimationTranslations[ACT_GLIDE] 		= ACT_HL2MP_JUMP_FIST
-		--self.AnimationTranslations[ACT_LAND] 		= ACT_HL2MP_IDLE_FIST
-        self.AnimationTranslations[ACT_RANGE_ATTACK1]          = ACT_IDLE_PISTOL
-		self.AnimationTranslations[ACT_GESTURE_RANGE_ATTACK1]  = ACT_RANGE_ATTACK1
-	end
-end
 function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup) 
 	if GetConVar("vj_madness_gore"):GetInt() == 1 and not self.is_madness_VR then
 		if dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 90 then
@@ -131,66 +91,15 @@ function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup)
 				self.gib_type = "head_damege" 
 			end
 		end
-
-		print(dmginfo:GetDamageForce())
 	end
-end
-function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
-	if self:Health() <= (self:GetMaxHealth() / 2.2) and not self.self_bomb == true and self.is_madness_hurt ~= true then
-		self.is_madness_hurt = true
-		self.NextAnyAttackTime_Melee = 0.5	 -- How much time until it can use any attack again? | Counted in Seconds
-		self.MeleeAttackDamage = 7
-		self.AnimTbl_MeleeAttack = {"vjges_punch_hunt_01","vjges_punch_hunt_02"} -- Melee Attack Animations
-	end
-	if ( hitgroup == HITGROUP_LEFTLEG ) or ( hitgroup == HITGROUP_RIGHTLEG ) and self:GetActivity() == ACT_RUN and math.random(1, 2) == 1 and self.CanFlinch == 1 then
-		self.grunt_NextStumbleT = CurTime() + 3
-		self:VJ_ACT_PLAYACTIVITY("run_stumble_01",true,2)
-		self.CanFlinch = 0
-		timer.Simple( 3, function()
-			if IsValid(self) then
-				self.CanFlinch = 1
-			end
-		end )
-	end	
-	if ( hitgroup == HITGROUP_CHEST ) or ( hitgroup == HITGROUP_STOMACH ) and math.random(1, 2) == 1 and self.CanFlinch == 1 then
-		self.grunt_NextStumbleT = CurTime() + 3
-		self:VJ_ACT_PLAYACTIVITY("stumble_back",true,2)
-		self.CanFlinch = 0
-		timer.Simple( 3, function()
-			if IsValid(self) then
-				self.CanFlinch = 1
-			end
-		end )
-	end
-end
------------------------------------------------------------------------------------------------
-function ENT:OnWeaponReload() 
-	self:DropWeapon( nil, self:GetPos() )
-	self.grunt_NextText = CurTime() + 3
-	madness_combat_snpc_doText(self,table.Random( madness_npc_no_ammo_dialogue ))	
 end
 
 function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 	corpseEnt.HLR_Corpse_Decal = self.HasBloodDecal and VJ_PICK(self.CustomBlood_Decal) or ""
 
-	if self.is_madness_VR == true then
-		net.Start("vj_madness_combat.vr_particles")
-			net.WriteEntity(corpseEnt)
-		net.Broadcast()
-		corpseEnt:RemoveAllDecals()
-		corpseEnt:Fire("FadeAndRemove","",0.1)
-		for i = 0, corpseEnt:GetPhysicsObjectCount() - 1 do
-			local colide = corpseEnt:GetPhysicsObjectNum( i )
-			colide:EnableGravity(false)
-		end
-		dmginfo:SetDamageForce(dmginfo:GetDamageForce()/3)
-		corpseEnt:TakeDamageInfo(dmginfo)
-	else
-		dmginfo:SetDamageForce(dmginfo:GetDamageForce()/3)
-		corpseEnt:TakeDamageInfo(dmginfo)
-		vj_madness_make_corpse_destructible(corpseEnt)
-	end
-
+	dmginfo:SetDamageForce(dmginfo:GetDamageForce()/3)
+	corpseEnt:TakeDamageInfo(dmginfo)
+	vj_madness_make_corpse_destructible(corpseEnt)
 	local bones = {
 		"r_upper_arm",
 		"r_lower_arm",
@@ -246,21 +155,6 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 			local forceMult = math.Clamp(dmginfo:GetDamage(), 0, 1000 )
         	
 			local Vel = dmginfo:GetDamageForce():GetNormalized()*forceMult + VectorRand()*forceMult
-			if self.is_yellow_blood == true then
-				if GetConVar("vj_madness_blood_mess"):GetInt() == 1 then 
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-										self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-				end
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib04.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("5")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib04.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib03.mdl",{CollisionDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head")).Pos,Ang=self:GetAngles(),Vel=vel})
-			else
 				if GetConVar("vj_madness_blood_mess"):GetInt() == 1 then 
 					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib02.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
 					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib01.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("5")).Pos,Ang=self:GetAngles(),Vel=vel})
@@ -275,7 +169,6 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk4.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
 				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk5.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
 				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk3.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head")).Pos,Ang=self:GetAngles(),Vel=vel})
-			end
 		end
 		
 		corpseEnt:SetBodygroup(2, 0)

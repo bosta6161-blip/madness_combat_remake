@@ -1,13 +1,11 @@
 --TODO list
 
 --nevada map
---bullet defece
 --surfaceprop 
 --mask damege
 --zeds
 --player models
 --flex fire effect
---jettpack npc
 --grunt_suicidal_bomber sound
 --zombie eat corpse
 --foot step
@@ -17,13 +15,11 @@
 --hats
 --NPC TALK
 --INSECT ON ZOMBIES
---COPY ANIMATIONS
 
 --need to release
 --zeds
 --guard
 --player guns
---jeetpak
 --triki
 --more gore damege
 --modo wave talves

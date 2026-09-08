@@ -8,6 +8,7 @@ include('shared.lua')
 ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
 ENT.StartHealth = 150
 ENT.BloodDecal = {"VJ_AAWH_GRUNT_YELLOW_BLOOD"}
+ENT.BloodColor = "Yellow" -- Its blood type, this will determine the blood decal, particle, etc.
 
 include( "noob_dev2323/madness_combat/grunt_range_script.lua" ) --include gore script
 
@@ -16,7 +17,6 @@ ENT.AAHW_NextRunT = 0
 ENT.MaxAmmo = 12
 ENT.Reloading = false
 ENT.ReloadTime = 2.0 
-ENT.grunt_no_pain_animation = true
 ENT.grunt_hold_type = "pistol"
 
 
@@ -27,7 +27,8 @@ ENT.madness_weapon_status = {
     damege = 2,
     force = 5,
     amount = 1,
-    spread = Vector(0.03, 0.04, 0.03)
+    spread = Vector(0.03, 0.04, 0.03),
+	custom_gun_sound = "noob_dev2323/madness/weapons/MP5k.wav"
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()

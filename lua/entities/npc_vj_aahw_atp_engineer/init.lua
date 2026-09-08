@@ -7,10 +7,8 @@ include('shared.lua')
 -----------------------------------------------*/
 ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
 ENT.StartHealth = 100
-ENT.Weapon_Disabled = false   -- Disable the ability for it to use weapons
-ENT.Weapon_IgnoreSpawnMenu = false  -- Should it ignore weapon overrides from the spawn menu?
 ENT.BloodDecal = {"VJ_AAWH_GRUNT_YELLOW_BLOOD"}
-
+ENT.BloodColor = "Yellow" -- Its blood type, this will determine the blood decal, particle, etc.
 ------ Grenade Attack ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ENT.HasGrenadeAttack = true 
@@ -20,7 +18,7 @@ ENT.GrenadeAttackMaxDistance = 1500 -- Max distance an enemy must be to initiate
 ENT.GrenadeAttackChance = 1-- 1 in x chance that it will throw a grenade when all the requirements are met | 1 = Throw it every time
 ENT.GrenadeAttackModel = false -- Overrides the grenade model | Can be string or table | Does NOT apply to picked up grenades and forced grenade attacks with custom entity
 ENT.GrenadeAttackAttachment = -1 -- The attachment that the grenade will be set to | -1 = Skip to use "self.GrenadeAttackBone" instead
-ENT.GrenadeAttackBone = "ValveBiped.Bip01_R_Hand" -- The bone that the grenade will be set to | -1 = Skip to use fail safe instead
+ENT.GrenadeAttackBone = "R_hand" -- The bone that the grenade will be set to | -1 = Skip to use fail safe instead
 	-- ====== Animation ====== --
 ENT.AnimTbl_GrenadeAttack = "punch01" -- Animations to play when it throws a grenade | false = Don't play an animation
 ENT.GrenadeAttackAnimationFaceEnemy = true -- Should it face the enemy while playing an grenade attack animation?
@@ -33,9 +31,6 @@ ENT.AAHW_NextRunT = 0
 ENT.MaxAmmo = 6
 ENT.Reloading = false
 ENT.ReloadTime = 2.0 
-ENT.grunt_no_pain_animation = true
-ENT.grunt_hold_type = "pistol"
-
 
 ENT.grunt_no_pain_animation = true
 ENT.grunt_hold_type = "shotgun"
@@ -44,7 +39,8 @@ ENT.madness_weapon_status = {
     damege = 3,
     force = 25,
     amount = 12,
-    spread = Vector(0.06,0.06,0.06)
+    spread = Vector(0.06,0.06,0.06),
+	custom_gun_sound = "noob_dev2323/madness/weapons/mossberg.wav"
 }
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -58,6 +54,7 @@ function ENT:CustomOnInitialize()
 	self:SetSkin(2)
 	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_shotgun.mdl",self)
 	self.CurrentAmmo = 6
+	self.AnimTbl_RangeAttack = {"vjges_shotgun_shot"} -- Range Attack Animations
 end
 function ENT:CustomOnTakeDamage_BeforeImmuneChecks(dmginfo, hitgroup)
 	local damageForce = dmginfo:GetDamageForce():Length()
@@ -67,6 +64,12 @@ function ENT:CustomOnTakeDamage_BeforeImmuneChecks(dmginfo, hitgroup)
      		self.Bleeds = false -- Disable bleeding temporarily when shot at the helmet
 			local dmg = dmginfo:GetDamage()/5
 			dmginfo:SetDamage(dmg)
+			local rico = EffectData()
+			rico:SetOrigin(dmginfo:GetDamagePosition())
+			rico:SetScale(4) -- Size
+			rico:SetMagnitude(2) -- Effect type | 1 = Animated | 2 = Basic
+			util.Effect("vj_madness_combat_spark", rico)
+			sound.Play("noob_dev2323/madness/melee/rico" .. math.random(1, 5) .. ".wav",self:GetPos(),75,100,1)
 		end
 	end
 end
