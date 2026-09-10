@@ -43,6 +43,7 @@ ENT.JumpParams = {
 	MaxDrop = 512, -- How low it can jump down (E -> S)
 	MaxDistance = 1024, -- Maximum distance between Start (S) and End (E)
 }
+ENT.IdleDialogueDistance = 1000 -- How close should an ally be for it to initiate a dialogue
 ENT.SightDistance = 18000 -- Initial sight distance | To retrieve: "self:GetMaxLookDistance()" | To change: "self:SetMaxLookDistance(distance)"
 --------------------------------------------------------------------------------------------------------------
 

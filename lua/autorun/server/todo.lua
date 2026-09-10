@@ -23,3 +23,10 @@
 --triki
 --more gore damege
 --modo wave talves
+
+
+--nevada map
+
+--gun shop
+--john base
+--esgoto
