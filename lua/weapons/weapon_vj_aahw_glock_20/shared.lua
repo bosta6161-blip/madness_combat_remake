@@ -7,7 +7,7 @@ SWEP.Author       = "noob_dev2323"
 SWEP.Instructions = "Click LMB to shot"
 
 SWEP.HoldType       = "pistol"
-SWEP.Slot           = 2
+SWEP.Slot           = 1
 SWEP.SlotPos        = 0 
 SWEP.Weight         = 5
 SWEP.AutoSwitchTo   = true
@@ -33,24 +33,22 @@ SWEP.Primary.Sound       = Sound("noob_dev2323/madness/weapons/glock.wav")
 
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
-
+SWEP.FiresUnderwater = true 
 
 SWEP.ViewModelFOV  = 70
 SWEP.BobScale  = 2
 SWEP.ViewModel  = "models/noob_dev2323/madness/weapons/c_glock20.mdl"
 SWEP.WorldModel = "models/noob_dev2323/weapons/w_double_barrel_shotgun.mdl"
 
-SWEP.IronSightsPos = Vector(-5.8, -8, 2.4)
-SWEP.IronSightsAng = Vector(0, 0, 0)
+SWEP.IronSightsPos = Vector(-5.783, -15.992, 3.861)
+SWEP.IronSightsAng = Vector(-2.01, -2.34,0.854)
 SWEP.IronSightTime = 0.15
 SWEP.IronSights = false
+SWEP.Spread = Vector(0.02,0.02, 0)
+SWEP.is_aim = false
 function SWEP:Deploy()
 	self:SendWeaponAnim(ACT_VM_DRAW)
 end
-function SWEP:shit_sound()
-	if client then return end
-	self:EmitSound("noob_dev2323/shotgun_reload.mp3")
-end 
 function SWEP:Initialize()
 	self:SetHoldType( self.HoldType )
 	self:DefaultReload(ACT_VM_RELOAD)
@@ -66,17 +64,19 @@ function SWEP:PrimaryAttack()
 	local bullet = {}
 
 	bullet.Num = 1
-	bullet.Spread = Vector(0.02,0.02, 0)
+	bullet.Spread = self.Spread
 	bullet.Damage = 20
 	bullet.Dir= self.Owner:GetAimVector()
 	bullet.Src = self.Owner:GetShootPos()
-	bullet.Force = 10
+	bullet.Force = 2
 	bullet.Tracer = 1
 	bullet.Attacker = self.Owner
  
     self:TakePrimaryAmmo(1)
 	self:FireBullets( bullet )
-	self.Owner:ViewPunch(Angle(math.random(0.5,1.5), 0, 0))
+    if self.is_aim == false then  
+    	self.Owner:ViewPunch(Angle(math.random(0.5,1.5), 0, 0))    
+    end
 	self.Weapon:EmitSound(Sound(self.Primary.Sound),75,100,1)
 	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
@@ -89,14 +89,21 @@ function SWEP:SecondaryAttack()
     -- Holding secondary fire controls the ironsights.
     self:SetNextSecondaryFire(CurTime() + 0.1)
 end
-
+ 
 function SWEP:GetViewModelPosition(pos, ang)
     local targetPos = self.IronSightsPos
     local targetAng = self.IronSightsAng
-
+    self.BobScale  = 0
+    self.Spread = Vector(0.01,0.01, 0)
+    self.DrawCrosshair = false
+    self.is_aim = true
     if not self.Owner:KeyDown(IN_ATTACK2) then
         targetPos = Vector(0, 0, 0)
         targetAng = Vector(0, 0, 0)
+        self.BobScale  = 2
+        self.Spread = Vector(0.02,0.02, 0)
+        self.DrawCrosshair = true
+        self.is_aim = false
     end
 
     local speed = FrameTime() * 12
@@ -117,7 +124,3 @@ function SWEP:GetViewModelPosition(pos, ang)
 
     return pos, ang
 end
-
-
-
-

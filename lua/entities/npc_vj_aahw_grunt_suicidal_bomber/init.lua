@@ -11,6 +11,7 @@ ENT.VJ_NPC_Class = {"CLASS_AAHW"} -- NPCs with the same class with be allied to 
 ENT.Weapon_Disabled = true  -- Disable the ability for it to use weapons
 ENT.MeleeAttackDistance = 90 -- How close does it have to be until it attacks?
 ENT.is_madness_bomb = true
+ENT.madness_bonemerge_prop = "models/noob_dev2323/madness/weapons/w_bombsuit.mdl"
 
 ENT.grunt_no_pain_animation = true
 ENT.grunt_no_stun = true 

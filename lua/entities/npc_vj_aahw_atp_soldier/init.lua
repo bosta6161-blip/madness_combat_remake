@@ -28,7 +28,8 @@ ENT.madness_weapon_status = {
     force = 5,
     amount = 1,
     spread = Vector(0.03, 0.04, 0.03),
-	custom_gun_sound = "noob_dev2323/madness/weapons/MP5k.wav"
+	custom_gun_sound = "noob_dev2323/madness/weapons/MP5k.wav",
+	attachment = "shot2"
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()

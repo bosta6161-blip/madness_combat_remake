@@ -4,7 +4,7 @@ function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup)
 			if self.madness_head_damege_table[hitgroup] or hitgroup == 15 then 
 				self.gib_type = "head_less"
 			end
-		elseif dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 20 then
+		elseif dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 25 then
 			if self.madness_head_damege_table[hitgroup] then 
 				self.head_damege_type = self.madness_head_damege_table[hitgroup]
 				self.gib_type = "head_damege" 
@@ -66,6 +66,9 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 	end
 	if self.melee_model then
 		self:CreateGibEntity("prop_physics",self.melee_model,{Pos=self:LocalToWorld(Vector(-50,20,0)),Ang=self:GetAngles()+Angle(90,0,0),Vel=vel})
+	end
+	if self.madness_bonemerge_prop then
+		bonemerge_prop_on_npc(self.madness_bonemerge_prop,corpseEnt)
 	end
 	if self.gib_type == "head_less" then
 		local yellow = self.is_yellow_blood
@@ -130,13 +133,7 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 				self:CreateGibEntity(
 					"obj_vj_gib",
 					"models/noob_dev2323/madness/gibs/" .. gib[1],
-					{
-						CollisionDecal = data.decal,
-						Pos = att.Pos,
-						Ang = self:GetAngles(),
-						Vel = vel
-					}
-				)
+					{CollisionDecal = data.decal,Pos = att.Pos,Ang = self:GetAngles(),Vel = vel})
 			end
 		end
 

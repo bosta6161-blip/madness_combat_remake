@@ -2,7 +2,6 @@
 
 --nevada map
 --surfaceprop 
---mask damege
 --zeds
 --player models
 --flex fire effect

@@ -14,8 +14,13 @@ function ENT:CustomOnAcceptInput(key, activator, caller, data)
 
     local enemy = self:GetEnemy()
     if not IsValid(enemy) then return end
+    local attID = nil 
+    if self.madness_weapon_status.attachment then
+        attID = self:LookupAttachment(self.madness_weapon_status.attachment)
+    else
+        attID = self:LookupAttachment("shot")
+    end
 
-    local attID = self:LookupAttachment("shot")
     if not attID or attID <= 0 then return end
 
     local att = self:GetAttachment(attID)

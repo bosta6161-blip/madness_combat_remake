@@ -40,7 +40,8 @@ ENT.madness_weapon_status = {
     force = 25,
     amount = 12,
     spread = Vector(0.06,0.06,0.06),
-	custom_gun_sound = "noob_dev2323/madness/weapons/mossberg.wav"
+	custom_gun_sound = "noob_dev2323/madness/weapons/mossberg.wav",
+	attachment = "shot3"
 }
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
