@@ -11,6 +11,7 @@ game.AddDecal("VJ_AAWH_GRUNT_BLOOD", {"decals/grunt/Blood01","decals/grunt/Blood
 game.AddDecal("VJ_AAWH_GRUNT_YELLOW_BLOOD", {"decals/yellow/yellow_01","decals/yellow/yellow_02","decals/yellow/yellow_03"})
 
 VJ.AddNPC("aahw grunt", "npc_vj_aahw_grunt", spawnCategory) -- Adds a NPC to the spawnmenu
+VJ.AddNPC("aahw armed grunt", "npc_vj_aahw_armed_grunt", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw agent", "npc_vj_aahw_agent", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw atp engineer", "npc_vj_aahw_atp_engineer", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw atp soldier", "npc_vj_aahw_atp_soldier", spawnCategory) -- Adds a NPC to the spawnmenu
