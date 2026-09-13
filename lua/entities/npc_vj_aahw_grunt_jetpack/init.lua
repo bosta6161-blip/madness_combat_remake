@@ -87,3 +87,8 @@ function ENT:TranslateActivity(act)
 	end
 	return self.BaseClass.TranslateActivity(self, act)
 end
+
+function ENT:CustomOnKilled(dmginfo,hitgroup)
+    self:Give("weapon_aahw_mp5")
+    self:DropWeapon()
+end

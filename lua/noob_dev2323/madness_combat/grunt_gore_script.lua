@@ -142,4 +142,75 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 
 		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1, 5) .. ".wav",corpseEnt:GetPos(),75,100,1)
 	end
+	if self.gib_type == "half" then
+		if self.HasGibDeathParticles == true and not self.isVR == true then
+			local bloodeffect = EffectData()
+			bloodeffect:SetOrigin(self:GetPos() +self:OBBCenter())
+			if self.is_yellow_blood == true then
+				bloodeffect:SetColor(VJ_Color2Byte(Color(229,255,0)))
+			else
+				bloodeffect:SetColor(VJ_Color2Byte(Color(130,19,10)))
+			end
+			bloodeffect:SetScale(50)
+			util.Effect("VJ_Blood1",bloodeffect)
+		end
+		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
+		local bone = corpseEnt:TranslateBoneToPhysBone(corpseEnt:LookupBone("torax"))
+		corpseEnt:RemoveInternalConstraint(bone)
+		local head_bone = corpseEnt:LookupBone("torax")
+		local bone = corpseEnt:TranslateBoneToPhysBone(head_bone)
+		local colide = corpseEnt:GetPhysicsObjectNum( bone )
+		colide:AddVelocity(Vector(0,0,999))
+		corpseEnt:SetBodygroup(0, 1)
+	end
+end
+
+function ENT:SetUpGibesOnDeath(dmginfo,hitgroup)
+	if GetConVar("vj_madness_gore"):GetInt() == 0 then return end
+	if dmginfo:GetDamageType() == DMG_CRUSH and dmginfo:GetDamageType() == DMG_SLASH then
+		self.gib_type = "half"
+		return 
+	end 
+	if dmginfo:GetDamageType() == DMG_ENERGYBEAM or dmginfo:GetDamageType() == DMG_SLASH then
+		return 
+	end 
+	if self.isVR then return end
+		if self.HasGibDeathParticles == true then
+			local bloodeffect = EffectData()
+			bloodeffect:SetOrigin(self:GetPos() +self:OBBCenter())
+			if self.is_yellow_blood == true then
+				bloodeffect:SetColor(VJ_Color2Byte(Color(229,255,0)))
+			else
+				bloodeffect:SetColor(VJ_Color2Byte(Color(130,19,10)))
+			end
+			bloodeffect:SetScale(50)
+			util.Effect("VJ_Blood1",bloodeffect)
+		end
+	if self.is_yellow_blood == true then
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib03.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib04.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib03.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib04.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib03.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib04.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib03.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib04.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_YELLOW_BLOOD"})
+	else
+	if GetConVar("vj_madness_blood_mess"):GetInt() == 1 then 
+		for i=1,math.random(6,15) do 
+			self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib02.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+			self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib01.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		end
+	end
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib02.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib01.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib02.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib01.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib02.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib01.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib02.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib01.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+	end
+
+	return true
 end

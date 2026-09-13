@@ -74,6 +74,10 @@ function ENT:CustomOnTakeDamage_BeforeImmuneChecks(dmginfo, hitgroup)
 		end
 	end
 end
+function ENT:CustomOnKilled(dmginfo,hitgroup)
+    self:Give("weapon_aahw_mossberg")
+    self:DropWeapon()
+end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- All functions and variables are located inside the base files. It can be found in the GitHub Repository: https://github.com/DrVrej/VJ-Base
 

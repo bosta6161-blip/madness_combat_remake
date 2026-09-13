@@ -40,6 +40,11 @@ function ENT:CustomOnInitialize()
 	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_mp5.mdl",self)
     self.CurrentAmmo = 45
 end
+
+function ENT:CustomOnKilled(dmginfo,hitgroup)
+    self:Give("weapon_aahw_mp5")
+    self:DropWeapon()
+end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- All functions and variables are located inside the base files. It can be found in the GitHub Repository: https://github.com/DrVrej/VJ-Base
 

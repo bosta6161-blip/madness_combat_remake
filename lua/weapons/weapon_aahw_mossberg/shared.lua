@@ -1,0 +1,23 @@
+SWEP.Gun = ("aahw_aahw_mossberg") -- must be the name of your swep but NO CAPITALS!
+SWEP.Base = "weapon_aahw_glock_20"
+SWEP.PrintName = "aahw mossberg"
+SWEP.Category = "madness combat"
+SWEP.Spawnable = true
+
+SWEP.Slot = 4
+SWEP.SlotPos        = 0 
+SWEP.Weight         = 5
+
+SWEP.ViewModel  = "models/weapons/c_shotgun.mdl"
+SWEP.WorldModel = "models/noob_dev2323/madness/weapons/w_shotgun.mdl"
+
+SWEP.Primary.Delay = 0.5
+SWEP.Primary.Automatic   = false   
+SWEP.Primary.Ammo        = "Buckshot"
+SWEP.Primary.ClipSize    = 4
+SWEP.Primary.ClipMax     = 90
+SWEP.Primary.DefaultClip = 8
+SWEP.Primary.Sound       = Sound("noob_dev2323/madness/weapons/mossberg.wav")
+
+SWEP.bullet_count = 8
+SWEP.Spread = Vector(0.06,0.06,0.06)

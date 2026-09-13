@@ -2,8 +2,8 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 ENT.Model = {"models/noob_dev2323/madness/npc/zeds_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
-ENT.StartHealth = 130 -- or you can use a convar: GetConVarNumber("vj_dum_dummy_h")
-ENT.VJ_NPC_Class = {"CLASS_AAHW"} -- NPCs with the same class with be allied to each other
+ENT.StartHealth = 100 -- or you can use a convar: GetConVarNumber("vj_dum_dummy_h")
+ENT.VJ_NPC_Class = {"CLASS_ZOMBIE"} -- NPCs with the same class with be allied to each other
 
 ENT.Bleeds = true -- Can it bleed? Controls all bleeding related components such blood decal, particle, pool, etc.
 ENT.BloodColor = "red" -- Its blood type, this will determine the blood decal, particle, etc.
@@ -24,17 +24,15 @@ ENT.ControllerParams = {
 ENT.DeathCorpseSetBoneAngles = true -- This can be used to stop the corpse glitching or flying on death
 ENT.DeathCorpseApplyForce = true  -- If false, force will not be applied to the corpse
 
-ENT.RunAwayOnUnknownDamage = true -- Should run away on damage
-
 ENT.HasMeleeAttack = true -- Should the SNPC have a melee attack?
-ENT.MeleeAttackDamageType = DMG_CLUB
-ENT.AnimTbl_MeleeAttack = {"vjges_punch01","vjges_punch02","vjges_melee_attack_01","vjges_melee_attack_02"} -- Melee Attack Animations
+ENT.MeleeAttackDamageType = DMG_SLASH
+ENT.AnimTbl_MeleeAttack = {"vjges_bite"} -- Melee Attack Animations
 ENT.MeleeAttackAnimationAllowOtherTasks = true -- If set to true, the animation will not stop other tasks from playing, such as chasing | Useful for gesture attacks!
 ENT.MeleeAttackDistance = 100 -- How close does it have to be until it attacks?
 ENT.MeleeAttackDamageDistance = 120 -- How far does the damage go?
 ENT.TimeUntilMeleeAttackDamage = 0.5 -- This counted in seconds | This calculates the time until it hits something
-ENT.NextAnyAttackTime_Melee = 0	 -- How much time until it can use any attack again? | Counted in Seconds
-ENT.MeleeAttackDamage = 10
+ENT.NextAnyAttackTime_Melee = 1	 -- How much time until it can use any attack again? | Counted in Seconds
+ENT.MeleeAttackDamage = 35
 
 ENT.AnimTbl_Flinch = {"vjges_flinch"} -- If it uses normal based animation, use this
 ENT.CanFlinch = 1 -- 0 = Don't flinch | 1 = Flinch at any damage | 2 = Flinch only from certain damages
@@ -46,22 +44,14 @@ ENT.FlinchAnimationDecreaseLengthAmount = 0 -- This will decrease the time it ca
 ENT.HitGroupFlinching_DefaultWhenNotHit = true -- If it uses hitgroup flinching, should it do the regular flinch if it doesn't hit any of the specified hitgroups?
 ENT.HitGroupFlinching_Values = nil -- EXAMPLES: {{HitGroup = {HITGROUP_HEAD}, Animation = {ACT_FLINCH_HEAD}}, {HitGroup = {HITGROUP_LEFTARM}, Animation = {ACT_FLINCH_LEFTARM}}, {HitGroup = {HITGROUP_RIGHTARM}, Animation = {ACT_FLINCH_RIGHTARM}}, {HitGroup = {HITGROUP_LEFTLEG}, Animation = {ACT_FLINCH_LEFTLEG}}, {HitGroup = {HITGROUP_RIGHTLEG}, Animation = {ACT_FLINCH_RIGHTLEG}}}
 
-ENT.HasSounds = true -- Put to false to disable ALL sound
-ENT.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/Punch1.wav","noob_dev2323/madness/melee/Punch2.wav","noob_dev2323/madness/melee/Punch3.wav","noob_dev2323/madness/melee/Punch4.wav","noob_dev2323/madness/melee/Punch5.wav"}
-ENT.SoundTbl_BeforeMeleeAttack = {"noob_dev2323/madness/grunt/Grunt.wav","noob_dev2323/madness/grunt/Grunt-1.wav","noob_dev2323/madness/grunt/Grunt-2.wav","noob_dev2323/madness/grunt/Grunt-3.wav","noob_dev2323/madness/grunt/Grunt-4.wav","noob_dev2323/madness/grunt/Grunt-5.wav","noob_dev2323/madness/grunt/Grunt-6.wav","noob_dev2323/madness/grunt/Grunt-7.wav","noob_dev2323/madness/grunt/Grunt-8.wav"}
+ENT.SoundTbl_MeleeAttack = {"noob_dev2323/madness/zeds/Bite1.wav","noob_dev2323/madness/zeds/Bite2.wav","noob_dev2323/madness/zeds/Bite3.wav"}
+ENT.SoundTbl_BeforeMeleeAttack = {"noob_dev2323/madness/grunt/swoosh1.wav","noob_dev2323/madness/grunt/swoosh2.wav","noob_dev2323/madness/grunt/swoosh3.wav","noob_dev2323/madness/grunt/swoosh4.wav"}
 
 ENT.DamageResponse = true -- Should it respond to damages while it has no enemy?
-ENT.Weapon_Disabled = false   -- Disable the ability for it to use weapons
-ENT.DropDeathLoot = false -- Should it drop loot on death?
+ENT.Weapon_Disabled = true   -- Disable the ability for it to use weapons
 
-
-ENT.Weapon_UnarmedBehavior = false   
-ENT.Weapon_CanCrouchAttack = false  -- Can it crouch while firing a weapon?
-ENT.AnimTbl_WeaponAttackCrouch = false  -- Animations to play while firing a weapon in crouched position
-ENT.AnimTbl_WeaponAttack = ACT_IDLE_PISTOL -- Animations to play while firing a weapon
-ENT.AnimTbl_WeaponAttackGesture = ACT_RANGE_ATTACK1   -- Gesture animations to play while firing a weapon | false = Don't play an animation
-ENT.Weapon_CanMoveFire = true    -- Can it fire its weapon while it's moving
-
+ENT.MeleeAttackSoundLevel = 100
+ENT.SightDistance = 18000 -- Initial sight distance | To retrieve: "self:GetMaxLookDistance()" | To change: "self:SetMaxLookDistance(distance)"
 -----------------------------------custom---------------------------
 ENT.is_madness_combat_npc = true 
 ENT.is_madness_hurt = false
@@ -70,10 +60,9 @@ ENT.grunt_status = {
 	is_trained = false 
 }
 ENT.madness_head_damege_table = {
-	[13] = 3,
-	[14] = 4,
+	[14] = 3,
+	[15] = 1,
 	[16] = 2,
-	[17] = 5,
 }
 function ENT:CustomOnInitialize()
 	self.madness_gib_type = "ok"
@@ -116,64 +105,66 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 		corpseEnt:SetBodygroup(1,self.head_damege_type)
 		self:EmitSound("noob_dev2323/madness/grunt/die.wav", 500, 100, 6, CHAN_AUTO ) -- Same as below
 		local att = self.head_damege_type
-		if self.isVR == false then
-			ParticleEffect("blood_impact_red_01_goop",self:GetAttachment(self:LookupAttachment(att)).Pos,self:GetAngles())
-			sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
-		end
-	end
-	if self.gib_type == "head_less" and not self.head_sliced then
-		if self.HasGibOnDeathEffects and not self.isVR == true then
-			local bloodeffect = EffectData()
-			bloodeffect:SetOrigin(corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head_gib")).Pos)
-			if self.is_yellow_blood == true then
-				bloodeffect:SetScale(15)
-				bloodeffect:SetColor(VJ_Color2Byte(Color(229,255,0)))
-			else
-				bloodeffect:SetScale(30)
-				bloodeffect:SetColor(VJ_Color2Byte(Color(130,19,10)))
-			end
 
-			util.Effect("VJ_Blood1",bloodeffect)
-
-			local bloodeffect = ents.Create("info_particle_system")
-			if self.is_yellow_blood == true then
-				bloodeffect:SetKeyValue("effect_name","qblood_advisor_shrapnel_impact")
-			else
-				bloodeffect:SetKeyValue("effect_name","blood_advisor_puncture_withdraw")
-			end
-			bloodeffect:SetPos(corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head")).Pos)
-			bloodeffect:SetAngles(corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head")).Ang)
-			bloodeffect:SetParent(corpseEnt)
-			bloodeffect:Fire("SetParentAttachment","head")
-			bloodeffect:Spawn()
-			bloodeffect:Activate()
-			bloodeffect:Fire("Start","",0)
-			bloodeffect:Fire("Kill","",7) 
-		end
-		corpseEnt.Head_gibbed = true 
-		if self.is_madness_VR == false then
-			local forceMult = math.Clamp(dmginfo:GetDamage(), 0, 1000 )
-        	
-			local Vel = dmginfo:GetDamageForce():GetNormalized()*forceMult + VectorRand()*forceMult
-				if GetConVar("vj_madness_blood_mess"):GetInt() == 1 then 
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib02.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib01.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("5")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib02.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib02.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib01.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
-					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/gib01.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head")).Pos,Ang=self:GetAngles(),Vel=vel})
-				end
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk2.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("2")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk1.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("5")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk6.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("4")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk4.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk5.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head_gib")).Pos,Ang=self:GetAngles(),Vel=vel})
-				self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/head_chunk3.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("head")).Pos,Ang=self:GetAngles(),Vel=vel})
-		end
-		
-		corpseEnt:SetBodygroup(2, 0)
-		corpseEnt:SetBodygroup(1, 1)
+		ParticleEffect("blood_impact_red_01_goop",self:GetAttachment(self:LookupAttachment(att)).Pos,self:GetAngles())
 		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
+	end
+	if self.gib_type == "head_less" then
+		local data = {
+			scale = 30,
+			color = Color(130, 19, 10),
+			particle = "blood_advisor_puncture_withdraw",
+			decal = "VJ_AAWH_GRUNT_BLOOD",
+			gibs = {
+				{"head_chunk2.mdl", "2"},
+				{"head_chunk1.mdl", "5"},
+				{"head_chunk6.mdl", "4"},
+				{"head_chunk4.mdl", "head_gib"},
+				{"head_chunk5.mdl", "head_gib"},
+				{"head_chunk3.mdl", "head"}
+			}
+		}
+
+		if self.HasGibOnDeathEffects then
+			local att = corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head_gib"))
+
+			local blood = EffectData()
+			blood:SetOrigin(att.Pos)
+			blood:SetScale(data.scale)
+			blood:SetColor(VJ_Color2Byte(data.color))
+			util.Effect("VJ_Blood1", blood)
+
+			local particle = ents.Create("info_particle_system")
+			local head = corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head"))
+
+			particle:SetKeyValue("effect_name", data.particle)
+			particle:SetPos(head.Pos)
+			particle:SetAngles(head.Ang)
+			particle:SetParent(corpseEnt)
+			particle:Fire("SetParentAttachment", "head")
+			particle:Spawn()
+			particle:Activate()
+			particle:Fire("Start", "", 0)
+			particle:Fire("Kill", "", 7)
+		end
+
+		corpseEnt.Head_gibbed = true
+
+		for _, gib in ipairs(data.gibs) do
+			local vel = Vector(math.Rand(-200, 200), math.Rand(-300, 300), math.Rand(200, 200))+Vector(dmginfo:GetDamageForce()/4)
+			local att = self:GetAttachment(self:LookupAttachment(gib[2]))
+
+			self:CreateGibEntity(
+				"obj_vj_gib",
+				"models/noob_dev2323/madness/gibs/" .. gib[1],
+				{CollisionDecal = data.decal,Pos = att.Pos,Ang = self:GetAngles(),Vel = vel})
+		end
+
+		corpseEnt:SetBodygroup(2, 0)
+		corpseEnt:SetBodygroup(3, 1)
+		corpseEnt:SetBodygroup(1, 4)
+
+		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1, 5) .. ".wav",corpseEnt:GetPos(),75,100,1)
 	end
 end
 -- All functions and variables are located inside the base files. It can be found in the GitHub Repository: https://github.com/DrVrej/VJ-Base

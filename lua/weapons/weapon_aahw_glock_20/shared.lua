@@ -28,7 +28,7 @@ SWEP.Primary.Automatic   = false
 SWEP.Primary.Ammo        = "Pistol"
 SWEP.Primary.ClipSize    = 12
 SWEP.Primary.ClipMax     = 90
-SWEP.Primary.DefaultClip = 45
+SWEP.Primary.DefaultClip = 24
 SWEP.Primary.Sound       = Sound("noob_dev2323/madness/weapons/glock.wav")
 
 SWEP.Secondary.Automatic = false
@@ -38,7 +38,7 @@ SWEP.FiresUnderwater = true
 SWEP.ViewModelFOV  = 70
 SWEP.BobScale  = 2
 SWEP.ViewModel  = "models/noob_dev2323/madness/weapons/c_glock20.mdl"
-SWEP.WorldModel = "models/noob_dev2323/weapons/w_double_barrel_shotgun.mdl"
+SWEP.WorldModel = "models/noob_dev2323/madness/weapons/w_glock_20.mdl"
 
 SWEP.IronSightsPos = Vector(-5.783, -15.992, 3.861)
 SWEP.IronSightsAng = Vector(-2.01, -2.34,0.854)
@@ -46,6 +46,9 @@ SWEP.IronSightTime = 0.15
 SWEP.IronSights = false
 SWEP.Spread = Vector(0.02,0.02, 0)
 SWEP.is_aim = false
+
+SWEP.bullet_count = 1
+
 function SWEP:Deploy()
 	self:SendWeaponAnim(ACT_VM_DRAW)
 end
@@ -63,7 +66,7 @@ function SWEP:PrimaryAttack()
 
 	local bullet = {}
 
-	bullet.Num = 1
+	bullet.Num = self.bullet_count
 	bullet.Spread = self.Spread
 	bullet.Damage = 20
 	bullet.Dir= self.Owner:GetAimVector()
@@ -82,6 +85,15 @@ function SWEP:PrimaryAttack()
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
+end
+function SWEP:Deploy()
+    local owner = self:GetOwner()
+
+    if IsValid(owner) and owner:IsPlayer() then
+        self.WorldModel = "models/noob_dev2323/madness/weapons/w_glock_20_player.mdl"
+    end
+
+    return true
 end
 
 function SWEP:SecondaryAttack()

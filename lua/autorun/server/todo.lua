@@ -2,7 +2,6 @@
 
 --nevada map
 --surfaceprop 
---zeds
 --player models
 --flex fire effect
 --grunt_suicidal_bomber sound
@@ -16,16 +15,15 @@
 --INSECT ON ZOMBIES
 
 --need to release
---zeds
 --guard
---player guns
 --triki
 --more gore damege
 --modo wave talves
-
+--fix flint
 
 --nevada map
 
 --gun shop
 --john base
 --esgoto
+--tunnel

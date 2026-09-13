@@ -28,3 +28,7 @@ function ENT:CustomOnInitialize()
 	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_glock_20.mdl",self)
     self.CurrentAmmo = 12
 end
+function ENT:CustomOnKilled(dmginfo,hitgroup)
+    self:Give("weapon_aahw_glock_20")
+    self:DropWeapon()
+end
