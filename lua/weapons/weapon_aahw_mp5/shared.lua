@@ -20,3 +20,4 @@ SWEP.Primary.DefaultClip = 24
 SWEP.Primary.Sound       = Sound("noob_dev2323/madness/weapons/MP5k.wav")
 
 SWEP.bullet_count = 1
+SWEP.damage = 10

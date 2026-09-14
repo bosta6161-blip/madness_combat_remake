@@ -10,6 +10,8 @@ function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup)
 				self.gib_type = "head_damege" 
 			end
 		end
+		self.madness_last_dmg_total = dmginfo:GetDamage()
+		self.madness_last_dmg_force = dmginfo:GetDamageForce()
 	end
 end
 
@@ -127,7 +129,8 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 		if not self.isVR then
 
 			for _, gib in ipairs(data.gibs) do
-				local vel = Vector(math.Rand(-200, 200), math.Rand(-300, 300), math.Rand(200, 200))+Vector(dmginfo:GetDamageForce()/4)
+				local forceMult = math.Clamp(self.madness_last_dmg_total, 0, 2000 )
+        		local Vel = self.madness_last_dmg_force:GetNormalized()*forceMult + VectorRand()*forceMult
 				local att = self:GetAttachment(self:LookupAttachment(gib[2]))
 
 				self:CreateGibEntity(
@@ -166,7 +169,7 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 	if self:GetBodygroup(2) == 1 and math.random(1, 4) == 1 then
 		local Vel = self:GetRight()*math.Rand(-1000,1000)+self:GetForward()*math.Rand(-1000,10) 
 		corpseEnt:SetBodygroup(2,0)
-		self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/glasses_prop.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("glasses")).Pos,Ang=self:GetAngles(),Vel=vel})
+		self:CreateGibEntity("prop_physics","models/noob_dev2323/madness/gibs/glasses_prop.mdl",{Pos=self:GetAttachment(self:LookupAttachment("glasses")).Pos,Ang=self:GetAngles(),Vel=vel})
 	end
 end
 

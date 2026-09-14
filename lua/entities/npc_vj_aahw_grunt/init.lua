@@ -192,19 +192,22 @@ function ENT:CustomOnThink_AIEnabled()
 end
 function ENT:OnFlinch(dmginfo, hitgroup, status)
 	if status == "Init" then
-		if dmginfo:GetDamage() > 25 and ( hitgroup == HITGROUP_LEFTLEG ) or ( hitgroup == HITGROUP_RIGHTLEG ) and self:GetActivity() == ACT_RUN then
-			self.FlinchAnimationDecreaseLengthAmount = 2 -- This will decrease the time it can move, attack, etc. | Use it to fix animation pauses after it finished the flinch animation
-			self.FlinchChance = 2
-			self.AnimTbl_Flinch = ACT_FLINCH_STOMACH
-			--ACT_FLINCH_CHEST 
-		elseif dmginfo:GetDamage() > 25 and ( hitgroup == ACT_FLINCH_CHEST ) or ( hitgroup == HITGROUP_STOMACH ) then
-			self.FlinchAnimationDecreaseLengthAmount = 2 -- This will decrease the time it can move, attack, etc. | Use it to fix animation pauses after it finished the flinch animation
-			self.FlinchChance = 2
-			self.AnimTbl_Flinch = ACT_FLINCH_CHEST
-			--ACT_FLINCH_CHEST
-		else
+		if dmginfo:GetDamage() > 25 then
+			self.NextFlinchTime = 0.5 -- How much time until it can flinch again?
+			self.FlinchAnimationDecreaseLengthAmount = 0 -- This will decrease the time it can move, attack, etc. | Use it to fix animation pauses after it finished the flinch animation
 			self.FlinchChance = 1
 			self.AnimTbl_Flinch = {"vjges_flinch"}
+			if ( hitgroup == HITGROUP_CHEST ) or ( hitgroup == HITGROUP_STOMACH ) then
+				self.FlinchAnimationDecreaseLengthAmount = 2 -- This will decrease the time it can move, attack, etc. | Use it to fix animation pauses after it finished the flinch animation
+				self.FlinchChance = 15
+				self.AnimTbl_Flinch = ACT_FLINCH_CHEST
+				self.NextFlinchTime = 4 -- How much time until it can flinch again?
+			elseif ( hitgroup == HITGROUP_LEFTLEG ) or ( hitgroup == HITGROUP_RIGHTLEG ) then
+				self.FlinchAnimationDecreaseLengthAmount = 2 -- This will decrease the time it can move, attack, etc. | Use it to fix animation pauses after it finished the flinch animation
+				self.FlinchChance = 2
+				self.AnimTbl_Flinch = ACT_FLINCH_STOMACH
+				self.NextFlinchTime = 4 -- How much time until it can flinch again?
+			end
 		end
 	end
 end

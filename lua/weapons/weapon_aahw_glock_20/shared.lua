@@ -48,7 +48,7 @@ SWEP.Spread = Vector(0.02,0.02, 0)
 SWEP.is_aim = false
 
 SWEP.bullet_count = 1
-
+SWEP.damage = 20
 function SWEP:Deploy()
 	self:SendWeaponAnim(ACT_VM_DRAW)
 end
@@ -68,7 +68,7 @@ function SWEP:PrimaryAttack()
 
 	bullet.Num = self.bullet_count
 	bullet.Spread = self.Spread
-	bullet.Damage = 20
+	bullet.Damage = self.damage
 	bullet.Dir= self.Owner:GetAimVector()
 	bullet.Src = self.Owner:GetShootPos()
 	bullet.Force = 2
