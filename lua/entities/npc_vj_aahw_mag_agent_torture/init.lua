@@ -124,6 +124,9 @@ function ENT:SetUpGibesOnDeath(dmginfo,hitgroup)
 
 	self:SetBodygroup(5, 2)
 end
+function ENT:MeleeAttackKnockbackVelocity(hitEnt)
+	return self:GetForward()*math.random(1000, 1000) + self:GetUp()*100
+end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- All functions and variables are located inside the base files. It can be found in the GitHub Repository: https://github.com/DrVrej/VJ-Base
 

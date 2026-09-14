@@ -28,15 +28,15 @@ ENT.HasMeleeAttack = true -- Should the SNPC have a melee attack?
 ENT.MeleeAttackDamageType = DMG_SLASH
 ENT.AnimTbl_MeleeAttack = {"vjges_bite"} -- Melee Attack Animations
 ENT.MeleeAttackAnimationAllowOtherTasks = true -- If set to true, the animation will not stop other tasks from playing, such as chasing | Useful for gesture attacks!
-ENT.MeleeAttackDistance = 100 -- How close does it have to be until it attacks?
+ENT.MeleeAttackDistance = 120 -- How close does it have to be until it attacks?
 ENT.MeleeAttackDamageDistance = 120 -- How far does the damage go?
 ENT.TimeUntilMeleeAttackDamage = 0.5 -- This counted in seconds | This calculates the time until it hits something
-ENT.NextAnyAttackTime_Melee = 1	 -- How much time until it can use any attack again? | Counted in Seconds
-ENT.MeleeAttackDamage = 35
+ENT.NextAnyAttackTime_Melee = 0.8	 -- How much time until it can use any attack again? | Counted in Seconds
+ENT.MeleeAttackDamage = 20
 
 ENT.AnimTbl_Flinch = {"vjges_flinch"} -- If it uses normal based animation, use this
 ENT.CanFlinch = 1 -- 0 = Don't flinch | 1 = Flinch at any damage | 2 = Flinch only from certain damages
-ENT.FlinchChance = 1 -- Chance of it flinching from 1 to x | 1 will make it always flinch
+ENT.FlinchChance = 14 -- Chance of it flinching from 1 to x | 1 will make it always flinch
 	-- To let the base automatically detect the animation duration, set this to false:
 ENT.NextMoveAfterFlinchTime = false -- How much time until it can move, attack, etc.
 ENT.NextFlinchTime = 0.5 -- How much time until it can flinch again?
@@ -70,7 +70,7 @@ end
 
 function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup) 
 	if GetConVar("vj_madness_gore"):GetInt() == 1 and not self.is_madness_VR then
-		if dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 90 then
+		if dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 70 then
 			if self.madness_head_damege_table[hitgroup] or hitgroup == 15 then 
 				self.gib_type = "head_less"
 			end
@@ -165,6 +165,34 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 		corpseEnt:SetBodygroup(1, 4)
 
 		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1, 5) .. ".wav",corpseEnt:GetPos(),75,100,1)
+	end
+end
+function ENT:SetUpGibesOnDeath(dmginfo,hitgroup)
+	if GetConVar("vj_madness_gore"):GetBool() then
+	 	if self.HasGibDeathParticles == true then
+			local bloodeffect = EffectData()
+			bloodeffect:SetOrigin(self:GetPos() +self:OBBCenter())
+			if self.is_yellow_blood == true then
+				bloodeffect:SetColor(VJ_Color2Byte(Color(229,255,0)))
+			else
+				bloodeffect:SetColor(VJ_Color2Byte(Color(130,19,10)))
+			end
+			bloodeffect:SetScale(50)
+			util.Effect("VJ_Blood1",bloodeffect)
+		end
+		if GetConVar("vj_madness_blood_mess"):GetInt() == 1 then 
+			for i=1,math.random(2,6) do 
+				self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib02.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+				self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib01.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+			end
+		end
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib02.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib01.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib02.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib01.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib02.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib01.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
+		return true
 	end
 end
 -- All functions and variables are located inside the base files. It can be found in the GitHub Repository: https://github.com/DrVrej/VJ-Base

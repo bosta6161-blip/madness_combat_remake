@@ -24,8 +24,8 @@ ENT.AnimTbl_GrenadeAttack = "punch01" -- Animations to play when it throws a gre
 ENT.GrenadeAttackAnimationFaceEnemy = true -- Should it face the enemy while playing an grenade attack animation?
 
 include( "noob_dev2323/madness_combat/grunt_range_script.lua" ) --include gore script
-ENT.RangeDistance = 300 -- This is how far away it can shoot
-
+ENT.RangeDistance = 1000 -- This is how far away it can shoot
+ENT.AnimTbl_MeleeAttack = {"vjges_punch01","vjges_melee_attack_02"} -- Melee Attack Animations
 -- Custom
 ENT.AAHW_NextRunT = 0
 ENT.MaxAmmo = 6
@@ -34,16 +34,16 @@ ENT.ReloadTime = 2.0
 
 ENT.grunt_no_pain_animation = true
 ENT.grunt_hold_type = "shotgun"
-ENT.NextRangeAttackTime = 2 --grunt time delay
+ENT.NextRangeAttackTime = 1 --grunt time delay
 ENT.madness_weapon_status = {
-    damege = 3,
-    force = 25,
+    damege = 6,
+    force = 20,
     amount = 12,
-    spread = Vector(0.06,0.06,0.06),
+    spread = Vector(0.08,0.09,0.08),
 	custom_gun_sound = "noob_dev2323/madness/weapons/mossberg.wav",
 	attachment = "shot3"
 }
-
+ENT.HasMeleeAttackKnockBack = true  -- Should knockback be applied on melee hit? | Use "MeleeAttackKnockbackVelocity" function to edit the velocity
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self.totalDamage = {}
@@ -77,6 +77,9 @@ end
 function ENT:CustomOnKilled(dmginfo,hitgroup)
     self:Give("weapon_aahw_mossberg")
     self:DropWeapon()
+end
+function ENT:MeleeAttackKnockbackVelocity(hitEnt)
+	return self:GetForward()*math.random(400, 400) + self:GetUp()*90
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- All functions and variables are located inside the base files. It can be found in the GitHub Repository: https://github.com/DrVrej/VJ-Base
