@@ -163,6 +163,11 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 		colide:AddVelocity(Vector(0,0,999))
 		corpseEnt:SetBodygroup(0, 1)
 	end
+	if self:GetBodygroup(2) == 1 and math.random(1, 4) == 1 then
+		local Vel = self:GetRight()*math.Rand(-1000,1000)+self:GetForward()*math.Rand(-1000,10) 
+		corpseEnt:SetBodygroup(2,0)
+		self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/glasses_prop.mdl",{CollisionDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("glasses")).Pos,Ang=self:GetAngles(),Vel=vel})
+	end
 end
 
 function ENT:SetUpGibesOnDeath(dmginfo,hitgroup)

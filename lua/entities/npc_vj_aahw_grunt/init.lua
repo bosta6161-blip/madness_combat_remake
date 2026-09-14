@@ -39,13 +39,11 @@ ENT.HasExtraMeleeAttackSounds = true -- Set to true to use the extra melee attac
 ENT.AnimTbl_Flinch = {"vjges_flinch"} -- If it uses normal based animation, use this
 ENT.CanFlinch = 1 -- 0 = Don't flinch | 1 = Flinch at any damage | 2 = Flinch only from certain damages
 ENT.FlinchChance = 2 -- Chance of it flinching from 1 to x | 1 will make it always flinch
-	-- To let the base automatically detect the animation duration, set this to false:
 ENT.NextMoveAfterFlinchTime = false -- How much time until it can move, attack, etc.
 ENT.NextFlinchTime = 0.5 -- How much time until it can flinch again?
 ENT.FlinchAnimationDecreaseLengthAmount = 0 -- This will decrease the time it can move, attack, etc. | Use it to fix animation pauses after it finished the flinch animation
-ENT.HitGroupFlinching_DefaultWhenNotHit = true -- If it uses hitgroup flinching, should it do the regular flinch if it doesn't hit any of the specified hitgroups?
-ENT.HitGroupFlinching_Values = {{HitGroup = {HITGROUP_STOMACH}, Animation = {ACT_FLINCH_CHEST}},{HitGroup = {HITGROUP_CHEST}, Animation = {ACT_FLINCH_CHEST}},{HitGroup = {HITGROUP_LEFTLEG}, Animation = {ACT_FLINCH_STOMACH}},{HitGroup = {HITGROUP_RIGHTLEG}, Animation = {ACT_FLINCH_STOMACH}}} -- EXAMPLES: {{HitGroup = {HITGROUP_HEAD}, Animation = {ACT_FLINCH_HEAD}}, {HitGroup = {HITGROUP_LEFTARM}, Animation = {ACT_FLINCH_LEFTARM}}, {HitGroup = {HITGROUP_RIGHTARM}, Animation = {ACT_FLINCH_RIGHTARM}}, {HitGroup = {HITGROUP_LEFTLEG}, Animation = {ACT_FLINCH_LEFTLEG}}, {HitGroup = {HITGROUP_RIGHTLEG}, Animation = {ACT_FLINCH_RIGHTLEG}}}
-ENT.HasSounds = true -- Put to false to disable ALL sound
+ENT.FlinchHitGroupMap = false -- EXAMPLE: {{HitGroup = HITGROUP_HEAD, Animation = ACT_FLINCH_HEAD}, {HitGroup = HITGROUP_LEFTARM, Animation = ACT_FLINCH_LEFTARM}, {HitGroup = HITGROUP_RIGHTARM, Animation = ACT_FLINCH_RIGHTARM}, {HitGroup = HITGROUP_LEFTLEG, Animation = ACT_FLINCH_LEFTLEG}, {HitGroup = HITGROUP_RIGHTLEG, Animation = ACT_FLINCH_RIGHTLEG}}
+
 ENT.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/Punch1.wav","noob_dev2323/madness/melee/Punch2.wav","noob_dev2323/madness/melee/Punch3.wav","noob_dev2323/madness/melee/Punch4.wav","noob_dev2323/madness/melee/Punch5.wav"}
 ENT.SoundTbl_BeforeMeleeAttack = {"noob_dev2323/madness/grunt/Grunt.wav","noob_dev2323/madness/grunt/Grunt-1.wav","noob_dev2323/madness/grunt/Grunt-2.wav","noob_dev2323/madness/grunt/Grunt-3.wav","noob_dev2323/madness/grunt/Grunt-4.wav","noob_dev2323/madness/grunt/Grunt-5.wav","noob_dev2323/madness/grunt/Grunt-6.wav","noob_dev2323/madness/grunt/Grunt-7.wav","noob_dev2323/madness/grunt/Grunt-8.wav"}
 ENT.SoundTbl_MeleeAttackMiss = {"noob_dev2323/madness/grunt/swoosh1.wav","noob_dev2323/madness/grunt/swoosh2.wav","noob_dev2323/madness/grunt/swoosh3.wav","noob_dev2323/madness/grunt/swoosh4.wav"}
@@ -191,6 +189,24 @@ function ENT:CustomOnThink_AIEnabled()
 
         self.AAHW_NextRunT = CurTime() + math.Rand(1.5, 2.5)
     end
+end
+function ENT:OnFlinch(dmginfo, hitgroup, status)
+	if status == "Init" then
+		if dmginfo:GetDamage() > 25 and ( hitgroup == HITGROUP_LEFTLEG ) or ( hitgroup == HITGROUP_RIGHTLEG ) and self:GetActivity() == ACT_RUN then
+			self.FlinchAnimationDecreaseLengthAmount = 2 -- This will decrease the time it can move, attack, etc. | Use it to fix animation pauses after it finished the flinch animation
+			self.FlinchChance = 2
+			self.AnimTbl_Flinch = ACT_FLINCH_STOMACH
+			--ACT_FLINCH_CHEST 
+		elseif dmginfo:GetDamage() > 25 and ( hitgroup == ACT_FLINCH_CHEST ) or ( hitgroup == HITGROUP_STOMACH ) then
+			self.FlinchAnimationDecreaseLengthAmount = 2 -- This will decrease the time it can move, attack, etc. | Use it to fix animation pauses after it finished the flinch animation
+			self.FlinchChance = 2
+			self.AnimTbl_Flinch = ACT_FLINCH_CHEST
+			--ACT_FLINCH_CHEST
+		else
+			self.FlinchChance = 1
+			self.AnimTbl_Flinch = {"vjges_flinch"}
+		end
+	end
 end
 include( "noob_dev2323/madness_combat/grunt_guns_script.lua" ) --include gore script
 include( "noob_dev2323/madness_combat/grunt_gore_script.lua" ) --include gore script

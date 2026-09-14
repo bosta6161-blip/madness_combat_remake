@@ -1,7 +1,5 @@
 --TODO list
 
---nevada map
---surfaceprop 
 --player models
 --flex fire effect
 --grunt_suicidal_bomber sound
@@ -13,6 +11,7 @@
 --hats
 --NPC TALK
 --INSECT ON ZOMBIES
+--center head gore
 
 --need to release
 --guard
@@ -20,6 +19,9 @@
 --more gore damege
 --modo wave talves
 --fix flint
+--atp backflip
+--punt walk
+--side grunt hole
 
 --nevada map
 
