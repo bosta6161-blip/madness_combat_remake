@@ -35,11 +35,12 @@ ENT.ReloadTime = 2.0
 ENT.grunt_no_pain_animation = true
 ENT.grunt_hold_type = "shotgun"
 ENT.NextRangeAttackTime = 1 --grunt time delay
+ENT.MeleeAttackDamage = 35
 ENT.madness_weapon_status = {
-    damege = 6,
+    damege = 5,
     force = 20,
     amount = 12,
-    spread = Vector(0.08,0.09,0.08),
+    spread = Vector(0.10,0.12,0.10),
 	custom_gun_sound = "noob_dev2323/madness/weapons/mossberg.wav",
 	attachment = "shot3"
 }
@@ -53,6 +54,7 @@ function ENT:CustomOnInitialize()
 	self.protect = true
 	self:SetBodygroup(2, 3)
 	self:SetSkin(2)
+	self:SetBodygroup(0, 1)
 	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_shotgun.mdl",self)
 	self.CurrentAmmo = 6
 	self.AnimTbl_RangeAttack = {"vjges_shotgun_shot"} -- Range Attack Animations

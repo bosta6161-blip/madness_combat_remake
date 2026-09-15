@@ -135,6 +135,7 @@ function ENT:EQUIP_A_MELEE_WEAPON()
 		{"models/noob_dev2323/madness/weapons/w_baton.mdl", "blunt"},
 		{"models/noob_dev2323/madness/weapons/w_iron_pipe.mdl", "blunt"},
 		{"models/noob_dev2323/madness/weapons/w_hammer.mdl", "blunt"},
+		{"models/noob_dev2323/madness/weapons/w_sledgehammer.mdl", "blunt"},
 		{"models/noob_dev2323/madness/weapons/w_megachette.mdl", "stab"}
 	}
 
