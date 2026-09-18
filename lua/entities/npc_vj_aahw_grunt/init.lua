@@ -33,7 +33,7 @@ ENT.MeleeAttackDamageDistance = 120 -- How far does the damage go?
 ENT.TimeUntilMeleeAttackDamage = 0.5 -- This counted in seconds | This calculates the time until it hits something
 ENT.MeleeAttackDamage = 10
 ENT.HasExtraMeleeAttackSounds = true -- Set to true to use the extra melee attack sounds
-
+ENT.NextMeleeAttackTime = 0.5 -- How much time until it can use a melee attack? | number = Specific time | VJ.SET = Randomized between the 2 numbers
 
 
 ENT.AnimTbl_Flinch = {"vjges_flinch"} -- If it uses normal based animation, use this

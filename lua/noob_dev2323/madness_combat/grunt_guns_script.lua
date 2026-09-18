@@ -45,7 +45,14 @@ function ENT:CustomOnAcceptInput(key, activator, caller, data)
     end
 	VJ.EmitSound(self,gun_sound, 80, 100)
 
-    ParticleEffectAttach("vj_rifle_full", PATTACH_POINT_FOLLOW, self, attID)
+    if not self.madness_weapon_status.noweaponflash then
+        ParticleEffectAttach("vj_rifle_full", PATTACH_POINT_FOLLOW, self, attID)
+    end
+    local rico = EffectData()
+    rico:SetOrigin(dmginfo:GetDamagePosition())
+    rico:SetScale(4) -- Size
+    rico:SetMagnitude(2) -- Effect type | 1 = Animated | 2 = Basic
+    util.Effect("vj_madness_combat_shell", rico)
     self.CurrentAmmo = self.CurrentAmmo - 1
 	end
 end

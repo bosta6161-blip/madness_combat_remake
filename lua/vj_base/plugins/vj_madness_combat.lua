@@ -12,6 +12,7 @@ game.AddDecal("VJ_AAWH_GRUNT_YELLOW_BLOOD", {"decals/yellow/yellow_01","decals/y
 
 VJ.AddNPC("aahw grunt", "npc_vj_aahw_grunt", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw armed grunt", "npc_vj_aahw_armed_grunt", spawnCategory) -- Adds a NPC to the spawnmenu
+VJ.AddNPC("aahw elite bodyguards", "npc_vj_aahw_elite_bodyguards", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw agent", "npc_vj_aahw_agent", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw atp engineer", "npc_vj_aahw_atp_engineer", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw atp soldier", "npc_vj_aahw_atp_soldier", spawnCategory) -- Adds a NPC to the spawnmenu
@@ -21,6 +22,7 @@ VJ.AddNPC("mag agent torture", "npc_vj_aahw_mag_agent_torture", spawnCategory) -
 VJ.AddNPC("aahw grunt suicidal bomber", "npc_vj_aahw_grunt_suicidal_bomber", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw vr training buddy", "npc_vj_aahw_vr_training_buddy", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw zombie grunt", "npc_vj_aahw_zombie_grunt", spawnCategory) -- Adds a NPC to the spawnmenu
+VJ.AddNPC("aahw zombie agent", "npc_vj_aahw_zombie_agent", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw scrape face", "npc_vj_aahw_scrape_face", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddClientConVar("vj_madness_blood_mess", 0)
 VJ.AddClientConVar("vj_madness_gore", 1)

@@ -9,6 +9,13 @@ ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will p
 ENT.StartHealth = 100
 ENT.BloodDecal = {"VJ_AAWH_GRUNT_YELLOW_BLOOD"}
 ENT.BloodColor = "Yellow" -- Its blood type, this will determine the blood decal, particle, etc.
+
+ENT.HealthRegenParams = {
+	Enabled = true , -- Can it regenerate its health?
+	Amount = 2, -- How much should the health increase after every delay?
+	Delay = VJ.SET(1,1.5), -- Delay between each regeneration
+	ResetOnDmg = true, -- Should the delay reset when it receives damage?
+}
 ------ Grenade Attack ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ENT.HasGrenadeAttack = true 
@@ -37,7 +44,7 @@ ENT.grunt_hold_type = "shotgun"
 ENT.NextRangeAttackTime = 1 --grunt time delay
 ENT.MeleeAttackDamage = 35
 ENT.madness_weapon_status = {
-    damege = 5,
+    damege = 3,
     force = 20,
     amount = 12,
     spread = Vector(0.10,0.12,0.10),

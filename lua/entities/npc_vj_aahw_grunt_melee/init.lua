@@ -6,8 +6,9 @@ include('shared.lua')
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
 ENT.VJ_NPC_Class = {"CLASS_AAHW"} -- NPCs with the same class with be allied to each other
-ENT.MeleeAttackDistance = 130 -- How close does it have to be until it attacks?
+ENT.MeleeAttackDistance = 100 -- How close does it have to be until it attacks?
 
+ENT.NextMeleeAttackTime = 0.5 -- How much time until it can use a melee attack? | number = Specific time | VJ.SET = Randomized between the 2 numbers
 ENT.grunt_no_pain_animation = true
 ENT.grunt_no_stun = true 
 ENT.grunt_is_melee = true

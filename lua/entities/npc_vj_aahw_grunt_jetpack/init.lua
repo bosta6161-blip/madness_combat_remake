@@ -28,7 +28,6 @@ ENT.grunt_no_pain_animation = true
 ENT.HitGroupFlinching_Values = nil
 ENT.madness_bonemerge_prop = "models/noob_dev2323/madness/weapons/w_jetpack.mdl"
 
-ENT.AAHW_NextRunT = 0
 ENT.MaxAmmo = 45
 ENT.Reloading = false
 ENT.ReloadTime = 2.0 
@@ -41,7 +40,7 @@ ENT.madness_weapon_status = {
     spread = Vector(0.09, 0.09, 0.09),
 	custom_gun_sound = "noob_dev2323/madness/weapons/MP5k.wav"
 }
-ENT.RangeDistance = 2000 -- This is how far away it can shoot
+ENT.RangeDistance = 1000 -- This is how far away it can shoot
 ENT.NextRangeAttackTime = 0 --grunt time delay
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()

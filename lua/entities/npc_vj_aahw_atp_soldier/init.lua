@@ -9,12 +9,16 @@ ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will p
 ENT.StartHealth = 150
 ENT.BloodDecal = {"VJ_AAWH_GRUNT_YELLOW_BLOOD"}
 ENT.BloodColor = "Yellow" -- Its blood type, this will determine the blood decal, particle, etc.
-
+ENT.HealthRegenParams = {
+	Enabled = true , -- Can it regenerate its health?
+	Amount = 3, -- How much should the health increase after every delay?
+	Delay = VJ.SET(1,1.5), -- Delay between each regeneration
+	ResetOnDmg = true, -- Should the delay reset when it receives damage?
+}
 include( "noob_dev2323/madness_combat/grunt_range_script.lua" ) --include gore script
-
+ENT.MeleeAttackDamage = 25
 -- Custom
-ENT.AAHW_NextRunT = 0
-ENT.MaxAmmo = 12
+ENT.MaxAmmo = 45
 ENT.Reloading = false
 ENT.ReloadTime = 2.0 
 ENT.grunt_hold_type = "pistol"
@@ -24,10 +28,10 @@ ENT.grunt_no_pain_animation = true
 ENT.grunt_hold_type = "pistol"
 ENT.NextRangeAttackTime = 0 --grunt time delay
 ENT.madness_weapon_status = {
-    damege = 2,
+    damege = 3,
     force = 5,
     amount = 1,
-    spread = Vector(0.03, 0.04, 0.03),
+    spread = Vector(0.04, 0.05, 0.04),
 	custom_gun_sound = "noob_dev2323/madness/weapons/MP5k.wav",
 	attachment = "shot2"
 }

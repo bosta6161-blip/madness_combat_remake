@@ -27,6 +27,7 @@ function ENT:OnMeleeAttack(status, enemy)
 		util.BlastDamage(self, self, self:GetPos(), 200, 40)
 		util.ScreenShake(self:GetPos(), 100, 200, 1, 2500)
 		if self.HasGibOnDeathEffects then ParticleEffect("vj_explosion2",self:GetPos(), Angle(0, 0, 0)) end
+		self:SetHealth(1)
 	end
 end
 function ENT:SetUpGibesOnDeath(dmginfo,hitgroup)

@@ -2,7 +2,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 ENT.Model = {"models/noob_dev2323/madness/npc/zeds_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
-ENT.StartHealth = 100 -- or you can use a convar: GetConVarNumber("vj_dum_dummy_h")
+ENT.StartHealth = 70 -- or you can use a convar: GetConVarNumber("vj_dum_dummy_h")
 ENT.VJ_NPC_Class = {"CLASS_ZOMBIE"} -- NPCs with the same class with be allied to each other
 
 ENT.Bleeds = true -- Can it bleed? Controls all bleeding related components such blood decal, particle, pool, etc.
@@ -71,13 +71,16 @@ end
 function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup) 
 	if GetConVar("vj_madness_gore"):GetInt() == 1 and not self.is_madness_VR then
 		if dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 70 then
-			if self.madness_head_damege_table[hitgroup] or hitgroup == 15 then 
+			if self.madness_head_damege_table[hitgroup] or hitgroup == 13 then 
 				self.gib_type = "head_less"
 			end
-		elseif dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 20 then
+		elseif dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 20 and not self.head_gib 	then
 			if self.madness_head_damege_table[hitgroup] then 
-				self.head_damege_type = self.madness_head_damege_table[hitgroup]
-				self.gib_type = "head_damege" 
+				self.head_gib = true 
+				local att = self.madness_head_damege_table[hitgroup]
+				self:SetBodygroup(1,self.madness_head_damege_table[hitgroup])
+				ParticleEffect("blood_impact_red_01_goop",self:GetAttachment(self:LookupAttachment(att)).Pos,self:GetAngles())
+				sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", self:GetPos(), 75, 100, 1)
 			end
 		end
 	end
@@ -100,14 +103,6 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 		local bone = corpseEnt:TranslateBoneToPhysBone(head_bone)
 		local colide = corpseEnt:GetPhysicsObjectNum( bone )
 		colide:EnableCollisions(false)
-	end
-	if self.gib_type == "head_damege" then
-		corpseEnt:SetBodygroup(1,self.head_damege_type)
-		self:EmitSound("noob_dev2323/madness/grunt/die.wav", 500, 100, 6, CHAN_AUTO ) -- Same as below
-		local att = self.head_damege_type
-
-		ParticleEffect("blood_impact_red_01_goop",self:GetAttachment(self:LookupAttachment(att)).Pos,self:GetAngles())
-		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
 	end
 	if self.gib_type == "head_less" then
 		local data = {
@@ -163,8 +158,14 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 		corpseEnt:SetBodygroup(2, 0)
 		corpseEnt:SetBodygroup(3, 1)
 		corpseEnt:SetBodygroup(1, 4)
+		corpseEnt:SetBodygroup(4, 1)
 
 		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1, 5) .. ".wav",corpseEnt:GetPos(),75,100,1)
+	end
+	if self:GetBodygroup(2) == 1 and math.random(1, 4) == 1 then
+		local Vel = self:GetRight()*math.Rand(-1000,1000)+self:GetForward()*math.Rand(-1000,10) 
+		corpseEnt:SetBodygroup(2,0)
+		self:CreateGibEntity("prop_physics","models/noob_dev2323/madness/gibs/glasses_prop.mdl",{Pos=self:GetAttachment(self:LookupAttachment("glasses")).Pos,Ang=self:GetAngles(),Vel=vel})
 	end
 end
 function ENT:SetUpGibesOnDeath(dmginfo,hitgroup)

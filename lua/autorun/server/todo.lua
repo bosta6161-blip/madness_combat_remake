@@ -5,20 +5,20 @@
 --grunt_suicidal_bomber sound
 --zombie eat corpse
 --foot step
---text on dead ragdoll
 --botle melee
 --zombie range atack
 --hats
 --NPC TALK
 --INSECT ON ZOMBIES
 --center head gore
+--shell eject
+
 
 --need to release
 --guard
 --triki
 --more gore damege
 --modo wave talves
---fix flint
 --atp backflip
 --punt walk
 --side grunt hole
