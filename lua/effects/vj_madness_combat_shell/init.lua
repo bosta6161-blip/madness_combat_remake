@@ -3,28 +3,42 @@
 	No parts of this code or any of its contents may be reproduced, copied, modified or adapted,
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
+-- Sound:
+local drip_sounds = {
+    "player/pl_shell1.wav",
+    "player/pl_shell2.wav",
+    "player/pl_shell3.wav",
+}
 function EFFECT:Init(data)
 	self.Pos = data:GetOrigin()
-	self.Size = data:GetScale()
+    local ang = data:GetAngles()
+
 	local emitter = ParticleEmitter(self.Pos)
-	if emitter == nil then return end
+	if not emitter then return end
 	
-	local shell = emitter:Add("decals/madness_trail", self.Pos)
-	shell:SetVelocity(VectorRand() * math.Rand(50, 50))
-	shell:SetDieTime(math.Rand(0.3, 0.7))
-	shell:SetStartAlpha(200)
-	shell:SetEndAlpha(0)
-	shell:SetStartSize(1)
-	shell:SetEndSize(2)
+	local shell = emitter:Add("decals/smg_shell", self.Pos)
+	shell:SetVelocity(
+		ang:Right() * 80 +
+		ang:Up() * 40 +
+		VectorRand() * 15
+	)
+	shell:SetDieTime(5)
+	shell:SetStartAlpha(255)
+	shell:SetEndAlpha(255)
+	shell:SetStartSize(2)
 	shell:SetRoll(math.random(0, 360))
-	shell:SetGravity(Vector(math.random(-300, 300), math.random(-300,300), math.random(-200, -10)))
-	shell:SetBounce(0.9)
-	shell:SetAirResistance(120)
+    shell:SetGravity(Vector(0, 0, -600))
+	shell:SetBounce(0.4)
+	shell:SetAirResistance(0)
 	shell:SetStartLength(0)
-	shell:SetEndLength(0.2)
+	shell:SetEndLength(0)
 	shell:SetVelocityScale(true)
 	shell:SetCollide(true)
-	shell:SetColor(255, 231, 166)
+	shell:SetCollideCallback(function(_, pos, normal,hitnormal)
+		sound.Play(table.Random(drip_sounds), pos, sound_level, math.Rand(95, 105),0.7)
+	end)
+	shell:SetColor(255, 255, 255)
+	
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function EFFECT:Think()

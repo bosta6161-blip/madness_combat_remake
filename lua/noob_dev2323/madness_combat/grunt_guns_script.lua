@@ -48,11 +48,11 @@ function ENT:CustomOnAcceptInput(key, activator, caller, data)
     if not self.madness_weapon_status.noweaponflash then
         ParticleEffectAttach("vj_rifle_full", PATTACH_POINT_FOLLOW, self, attID)
     end
-    local rico = EffectData()
-    rico:SetOrigin(dmginfo:GetDamagePosition())
-    rico:SetScale(4) -- Size
-    rico:SetMagnitude(2) -- Effect type | 1 = Animated | 2 = Basic
-    util.Effect("vj_madness_combat_shell", rico)
+    shell = self:LookupAttachment("shell")
+    local effect = EffectData()
+    effect:SetOrigin(self:GetAttachment(shell).Pos)
+    effect:SetAngles(self:GetAngles())
+    util.Effect("vj_madness_combat_shell", effect) 
     self.CurrentAmmo = self.CurrentAmmo - 1
 	end
 end

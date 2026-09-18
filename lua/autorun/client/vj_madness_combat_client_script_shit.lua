@@ -79,7 +79,7 @@ function madness_combat_vr_particles(ent)
                                 particle:SetDieTime( 3 )
 
                                 particle:SetStartAlpha( math.random( 200, 255 ) )
-                                particle:SetColor( 0,255, 0 )
+                                particle:SetColor(0,255, 0)
                                 particle:SetStartSize( math.random( 1, 2,5 ) )
 
                                 particle:SetEndAlpha( 0 )
