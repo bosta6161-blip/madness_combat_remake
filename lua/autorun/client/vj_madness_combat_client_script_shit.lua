@@ -71,29 +71,28 @@ function madness_combat_vr_particles(ent)
 
                     if pos then
                         local emitter = ParticleEmitter(pos)
+	                    if not emitter then return end
 
-                        if emitter then
-                            local particle = emitter:Add("decals/madness_trail", pos)
+                        local particle = emitter:Add("decals/madness_trail", pos)
 
-                            if particle then
-                                particle:SetDieTime( 3 )
+                        if particle then
+                            particle:SetDieTime( 3 )
 
-                                particle:SetStartAlpha( math.random( 200, 255 ) )
-                                particle:SetColor(0,255, 0)
-                                particle:SetStartSize( math.random( 1, 2,5 ) )
+                            particle:SetStartAlpha( math.random( 200, 255 ) )
+                            particle:SetColor(0,255, 0)
+                            particle:SetStartSize( math.random( 1, 2,5 ) )
 
-                                particle:SetEndAlpha( 0 )
-                                particle:SetEndSize( 1 )
-                                particle:SetVelocityScale(true)
-                                particle:SetLighting( true)
+                            particle:SetEndAlpha( 0 )
+                            particle:SetEndSize( 1 )
+                            particle:SetVelocityScale(true)
+                            particle:SetLighting( true)
 
-                                particle:SetGravity( Vector( 0, 0, -100 ) )
-                                particle:SetVelocity(Vector( math.random(-40,40), math.random(-40,40), math.random(50,140)))
-                                particle:SetCollide( true )	
-                            end 
+                            particle:SetGravity( Vector( 0, 0, -100 ) )
+                            particle:SetVelocity(Vector( math.random(-40,40), math.random(-40,40), math.random(50,140)))
+                            particle:SetCollide( true )	
+                        end 
 
-                            emitter:Finish()
-                        end
+                        emitter:Finish()
                     end
                 end
             end

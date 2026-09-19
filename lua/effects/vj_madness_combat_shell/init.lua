@@ -37,7 +37,7 @@ function EFFECT:Init(data)
 	shell:SetCollideCallback(function(_, pos, normal,hitnormal)
 		sound.Play(table.Random(drip_sounds), pos, sound_level, math.Rand(95, 105),0.7)
 	end)
-	shell:SetColor(255, 255, 255)
+
 	
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------

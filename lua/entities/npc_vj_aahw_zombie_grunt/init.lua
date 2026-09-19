@@ -64,6 +64,7 @@ ENT.madness_head_damege_table = {
 	[15] = 1,
 	[16] = 2,
 }
+--13
 function ENT:CustomOnInitialize()
 	self.madness_gib_type = "ok"
 end
@@ -74,8 +75,23 @@ function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup)
 			if self.madness_head_damege_table[hitgroup] or hitgroup == 13 then 
 				self.gib_type = "head_less"
 			end
-		elseif dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 20 and not self.head_gib 	then
-			if self.madness_head_damege_table[hitgroup] then 
+		elseif dmginfo:GetDamageType() ~= 4 and dmginfo:GetDamage() >= 20 then
+			if hitgroup == 13 and math.random(1, 2) == 1 then
+				if self.HasGibDeathParticles == true then
+					local bloodeffect = EffectData()
+					bloodeffect:SetOrigin(self:GetAttachment(self:LookupAttachment("glasses")).Pos)
+					bloodeffect:SetColor(VJ_Color2Byte(Color(130,19,10)))
+					bloodeffect:SetScale(30)
+					util.Effect("VJ_Blood1",bloodeffect)
+				end
+				if self:GetBodygroup(3) == 0 then
+					local Vel = self:GetRight()*math.Rand(-1000,1000)+self:GetForward()*math.Rand(-1000,10) 
+					self:SetBodygroup(2,0)
+					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/jaw_prop.mdl",{BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("glasses")).Pos,Ang=self:GetAngles(),Vel=vel})
+				end
+				self:SetBodygroup(3, 1)
+			end
+			if self.madness_head_damege_table[hitgroup] and not self.head_gib then 
 				self.head_gib = true 
 				local att = self.madness_head_damege_table[hitgroup]
 				self:SetBodygroup(1,self.madness_head_damege_table[hitgroup])
