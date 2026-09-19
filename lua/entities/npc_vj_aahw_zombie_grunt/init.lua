@@ -86,7 +86,6 @@ function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup)
 				end
 				if self:GetBodygroup(3) == 0 then
 					local Vel = self:GetRight()*math.Rand(-1000,1000)+self:GetForward()*math.Rand(-1000,10) 
-					self:SetBodygroup(2,0)
 					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/jaw_prop.mdl",{BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("glasses")).Pos,Ang=self:GetAngles(),Vel=vel})
 				end
 				self:SetBodygroup(3, 1)

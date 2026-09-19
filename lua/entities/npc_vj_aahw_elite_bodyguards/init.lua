@@ -2,7 +2,7 @@ AddCSLuaFile("shared.lua")
 include('shared.lua')
 
 ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
-ENT.StartHealth = 150 --six seven six seven :/ 
+ENT.StartHealth = 100 --six seven six seven :/ 
 ENT.HealthRegenParams = {
 	Enabled = true , -- Can it regenerate its health?
 	Amount = 2, -- How much should the health increase after every delay?
