@@ -24,7 +24,59 @@ function vj_madness_make_corpse_destructible(ent)
 		ent.madness_boneHealth["L_foot"] = defalt_value
     end
 end
+function vj_madness_make_blood(ragdoll,bone_name,YELLOW)
+	if GetConVar("goremod_blood"):GetBool() then
+        timer.Simple(0, function()
+            if not ragdoll:IsValid() then
+                return 
+            end
+            local bone_id = ragdoll:LookupBone(bone_name) --get bone id from bone name
 
+            if bone_id == 0 then
+                return 
+            end
+            if ragdoll.goremod_is_ragdoll_limb then
+                return 
+            end
+            local bone_parent = ragdoll:GetBoneParent(bone_id)
+            local bonepos,bone_rotation = ragdoll:GetBonePosition(bone_id)
+            
+
+            if bone_parent == 0 then
+                bone_parent = bone_id
+            end
+            local aids,bone_rotation67 = ragdoll:GetBonePosition(bone_parent)
+            
+
+            local lpos, lang = WorldToLocal(bonepos,bone_rotation67, ragdoll:GetBonePosition(bone_parent))
+
+            local meme = ents.Create("prop_dynamic")
+            if not IsValid(meme) then return end 
+            
+            meme:SetModel("models/props_junk/GlassBottle01a.mdl")               
+            meme:Spawn()
+            meme:SetModelScale(0)
+            meme:SetNotSolid(true)
+            meme:DrawShadow(false)
+        
+            SafeRemoveEntityDelayed(meme, 15)
+        
+            meme:FollowBone(ragdoll, bone_parent)
+        
+            meme:SetLocalAngles(lang + Angle(180,90,0))
+            meme:SetLocalPos(lpos + lang:Forward()*-8)
+            
+            local effectdata = EffectData()
+            effectdata:SetEntity(meme)
+            if YELLOW then
+                effectdata:SetFlags(1) 
+            else
+                effectdata:SetFlags(0)
+            end
+            util.Effect("vj_madness_combat_spray", effectdata)
+        end)
+    end
+end
 hook.Add("EntityTakeDamage", "EntityMadness_ent_TakeDamage", function(target, dmginfo)
 	if GetConVar("vj_madness_can_gib_ragdoll"):GetBool() == true then
 		if target:IsRagdoll() and target.vj_madness_destructible_Corpse and CurTime() > target.vj_madness_Start_delay then 
@@ -48,7 +100,6 @@ hook.Add("EntityTakeDamage", "EntityMadness_ent_TakeDamage", function(target, dm
 
 				if target.madness_boneHealth[bone_name] then
 					target.madness_boneHealth[bone_name] = target.madness_boneHealth[bone_name] - dmginfo:GetDamage()
-					print("health"..target.madness_boneHealth[bone_name])
 				end
 
 				if target.madness_boneHealth["head"] <= 0 && !target.Head_gibbed then 
@@ -143,12 +194,19 @@ function madness_gib_head(target,dmg_force)
 	madness_physbone_colide(target,"head")
 	local head_bone = target:LookupBone( "head" )
 	target:ManipulateBoneScale(head_bone,Vector(0,0,0))
+	target:SetBodygroup(3, 1)
 	if target:GetSkin() == 2 then 
 		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/gib03.mdl",target:GetAttachment(target:LookupAttachment("2")).Pos,dmg_force,true )
 		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/gib03.mdl",target:GetAttachment(target:LookupAttachment("5")).Pos,dmg_force,true)
 		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/gib04.mdl",target:GetAttachment(target:LookupAttachment("head")).Pos,dmg_force,true)
 		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/gib03.mdl",target:GetAttachment(target:LookupAttachment("head_gib")).Pos,dmg_force,true )
 		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/gib04.mdl",target:GetAttachment(target:LookupAttachment("head_gib")).Pos,dmg_force,true)
+	elseif target:GetModel() == "models/noob_dev2323/madness/npc/zeds_npc.mdl" then 
+		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/gib01.mdl",target:GetAttachment(target:LookupAttachment("2")).Pos,dmg_force )
+		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/gib02.mdl",target:GetAttachment(target:LookupAttachment("5")).Pos,dmg_force)
+		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/gib01.mdl",target:GetAttachment(target:LookupAttachment("head")).Pos,dmg_force)
+		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/gib02.mdl",target:GetAttachment(target:LookupAttachment("head_gib")).Pos,dmg_force)
+		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/gib01.mdl",target:GetAttachment(target:LookupAttachment("head_gib")).Pos,dmg_force)
 	else
 		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/head_chunk2.mdl",target:GetAttachment(target:LookupAttachment("2")).Pos,dmg_force)
 		madness_make_vj_gibs("models/noob_dev2323/madness/gibs/head_chunk1.mdl",target:GetAttachment(target:LookupAttachment("5")).Pos,dmg_force)

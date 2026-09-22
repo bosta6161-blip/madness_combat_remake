@@ -19,6 +19,7 @@ VJ.AddNPC("aahw atp soldier", "npc_vj_aahw_atp_soldier", spawnCategory) -- Adds 
 VJ.AddNPC("aahw grunt melee", "npc_vj_aahw_grunt_melee", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw grunt jeetpack", "npc_vj_aahw_grunt_jetpack", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("mag agent torture", "npc_vj_aahw_mag_agent_torture", spawnCategory) -- Adds this abomination to the spawnmenu
+VJ.AddNPC("mag agent torture rebel", "npc_vj_aahw_mag_agent_torture_revel", spawnCategory) -- Adds this abomination to the spawnmenu
 VJ.AddNPC("aahw grunt suicidal bomber", "npc_vj_aahw_grunt_suicidal_bomber", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw vr training buddy", "npc_vj_aahw_vr_training_buddy", spawnCategory) -- Adds a NPC to the spawnmenu
 VJ.AddNPC("aahw zombie grunt", "npc_vj_aahw_zombie_grunt", spawnCategory) -- Adds a NPC to the spawnmenu
@@ -27,7 +28,8 @@ VJ.AddNPC("aahw scrape face", "npc_vj_aahw_scrape_face", spawnCategory) -- Adds 
 VJ.AddClientConVar("vj_madness_blood_mess", 0)
 VJ.AddClientConVar("vj_madness_gore", 1)
 VJ.AddClientConVar("vj_madness_can_gib_ragdoll", 1)
-
+VJ.AddClientConVar("vj_madness_blood", 1)
+VJ.AddClientConVar("vj_madness_blood_particle_decal", 1)
 if CLIENT then
 	hook.Add("PopulateToolMenu", "VJ_ADDTOMENU_MADNESS_COMBAT", function()
 		spawnmenu.AddToolMenuOption("DrVrej", "SNPC Configures", "madness combat remake snpc", "madness combat remake snpc", "", "", function(panel)
@@ -40,6 +42,8 @@ if CLIENT then
 			panel:CheckBox("this make enemies die in a very gory way.", "vj_madness_blood_mess")
 			panel:CheckBox("Enable Gore?", "vj_madness_gore")
 			panel:CheckBox("Enable gib ragdoll?", "vj_madness_can_gib_ragdoll")
+			panel:CheckBox("blood particle", "vj_madness_blood")
+			panel:CheckBox("blood particle decal", "vj_madness_blood_particle_decal")
 		end)
 	end)
 end

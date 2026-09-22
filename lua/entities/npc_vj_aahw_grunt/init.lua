@@ -56,11 +56,10 @@ ENT.SoundTbl_MeleeAttackExtra = {"noob_dev2323/madness/grunt/gruntpunch1.wav","n
 -----------------------------------custom---------------------------
 ENT.is_madness_VR = false 
 ENT.is_madness_combat_npc = true 
-ENT.grunt_NextStumbleT = CurTime() + 3
 ENT.grunt_NextText = CurTime() + 3
 ENT.is_madness_hurt = false
 ENT.AAHW_NextRunT = 0
-
+ENT.infected = false
 -----------------------------------status---------------------------
 ENT.grunt_hold_type = "none"
 ENT.grunt_no_pain_animation = false

@@ -1,11 +1,11 @@
 ENT.HasRangeAttack = true -- Should the SNPC have a range attack?
 ENT.RangeAttackEntityToSpawn = "obj_vj_bullet_shotgunbullet" -- The entity that is spawned when range attacking
 ENT.AnimTbl_RangeAttack = {"vjges_weaponshotg"} -- Range Attack Animations
-ENT.RangeDistance = 5000 -- This is how far away it can shoot
+ENT.RangeDistance = 1000 -- This is how far away it can shoot
 ENT.RangeToMeleeDistance = 80 -- How close does it have to be until it uses melee?
 ENT.TimeUntilRangeAttackProjectileRelease = false -- How much time until the projectile code is ran?
 
-ENT.NoChaseAfterCertainRange = true
+ENT.NoChaseAfterCertainRange = false 
 ENT.NoChaseAfterCertainRange_FarDistance = 3000 
 ENT.NoChaseAfterCertainRange_CloseDistance = 1 
 ENT.NoChaseAfterCertainRange_Type = "Regular"

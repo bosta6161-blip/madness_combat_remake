@@ -39,7 +39,11 @@ SWEP.ViewModelFOV  = 70
 SWEP.BobScale  = 2
 SWEP.ViewModel  = "models/noob_dev2323/madness/weapons/c_glock20.mdl"
 SWEP.WorldModel = "models/noob_dev2323/madness/weapons/w_glock_20.mdl"
-
+SWEP.Reloading = false
+SWEP.ReloadTime = 0.55
+SWEP.ReloadMode = "Normal"
+-- "Shell"  = one shell at a time
+-- "Normal" = reload like a normal weapon
 SWEP.IronSightsPos = Vector(-5.783, -15.992, 3.861)
 SWEP.IronSightsAng = Vector(-2.01, -2.34,0.854)
 SWEP.IronSightTime = 0.15
@@ -135,4 +139,121 @@ function SWEP:GetViewModelPosition(pos, ang)
     pos = pos + ang:Up() * self.SightPos.z
 
     return pos, ang
+end
+function SWEP:Reload()
+
+    -- Normal weapon reload
+    if self.ReloadMode == "Normal" then
+
+        if self.Reloading then return end
+        if self:Clip1() >= self.Primary.ClipSize then return end
+        if self:Ammo1() <= 0 then return end
+
+        self.Reloading = true
+
+        self:DefaultReload(ACT_VM_RELOAD)
+
+        -- Calculate normal reload time
+        self.ReloadFinishTime = CurTime() + 2
+
+        return
+    end
+
+
+    -- Shell-by-shell reload
+    if self.ReloadMode == "Shell" then
+
+        if self.Reloading then return end
+        if self:Clip1() >= self.Primary.ClipSize then return end
+        if self:Ammo1() <= 0 then return end
+
+        self.Reloading = true
+
+        self:SetNextPrimaryFire(CurTime() + 999)
+        self:SetNextSecondaryFire(CurTime() + 999)
+
+        self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_START)
+
+        self.ReloadEndTime = CurTime() + 0.5
+    end
+end
+
+
+--========================================
+-- THINK
+--========================================
+
+function SWEP:Think()
+
+    if not self.Reloading then return end
+
+
+    --====================================
+    -- NORMAL RELOAD
+    --====================================
+
+    if self.ReloadMode == "Normal" then
+
+        if CurTime() >= self.ReloadFinishTime then
+
+            self.Reloading = false
+
+            self:SetNextPrimaryFire(CurTime() + 0.2)
+            self:SetNextSecondaryFire(CurTime() + 0.2)
+        end
+
+        return
+    end
+
+
+    --====================================
+    -- SHELL RELOAD
+    --====================================
+
+    if self.ReloadMode == "Shell" then
+
+        if CurTime() < self.ReloadEndTime then
+            return
+        end
+
+        -- Magazine full
+        if self:Clip1() >= self.Primary.ClipSize then
+            self:FinishReload()
+            return
+        end
+
+        -- No reserve ammo
+        if self:Ammo1() <= 0 then
+            self:FinishReload()
+            return
+        end
+
+        -- Insert one shell
+        self:SetClip1(self:Clip1() + 1)
+        self:GetOwner():RemoveAmmo(1, self.Primary.Ammo)
+
+        self:EmitSound("Weapon_Shotgun.Reload")
+
+        self:SendWeaponAnim(ACT_VM_RELOAD)
+
+        self.ReloadEndTime = CurTime() + self.ReloadTime
+    end
+end
+
+
+--========================================
+-- FINISH RELOAD
+--========================================
+
+function SWEP:FinishReload()
+
+    if not self.Reloading then return end
+
+    self.Reloading = false
+    self.ReloadEndTime = nil
+
+    self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_FINISH)
+
+    self:SetNextPrimaryFire(CurTime() + 0.2)
+    self:SetNextSecondaryFire(CurTime() + 0.2)
 end

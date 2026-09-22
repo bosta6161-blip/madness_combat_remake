@@ -8,7 +8,7 @@ SWEP.Slot = 4
 SWEP.SlotPos        = 0 
 SWEP.Weight         = 5
 
-SWEP.ViewModel  = "models/weapons/c_shotgun.mdl"
+SWEP.ViewModel  = "models/noob_dev2323/madness/weapons/c_shotgun.mdl"
 SWEP.WorldModel = "models/noob_dev2323/madness/weapons/w_shotgun.mdl"
 
 SWEP.Primary.Delay = 0.3
@@ -22,3 +22,8 @@ SWEP.Primary.Sound       = Sound("noob_dev2323/madness/weapons/mossberg.wav")
 SWEP.bullet_count = 12
 SWEP.Spread = Vector(0.08,0.08,0.08)
 SWEP.damage = 8
+
+SWEP.ReloadMode = "Shell"
+SWEP.ReloadTime = 0.3
+SWEP.IronSightsPos = Vector(-8.971, 0.871, 4.349)
+SWEP.IronSightsAng = Vector(0, 0, 0)

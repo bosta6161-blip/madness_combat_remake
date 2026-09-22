@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "decals/madness_blood_decal_yellow"
+	"$translucent" "1"
+	"$decal" "1"
+	"$decalscale" 0.2
+}

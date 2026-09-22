@@ -6,6 +6,7 @@ function ENT:CustomOnAcceptInput(key, activator, caller, data)
 		self:MeleeAttackCode()
 	elseif key == "event_rattack" then
     if self.Reloading then return end
+    if self.infected then return end
 
     if self.CurrentAmmo <= 0 then
         self:StartReload()
@@ -60,6 +61,7 @@ end
 -- CUSTOM RELOAD COSMETIC THINGY
 function ENT:StartReload()
     if self.Reloading then return end
+    if self.infected then return end
 
     self.Reloading = true
     self.HasRangeAttack = false

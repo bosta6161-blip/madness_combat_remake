@@ -10,9 +10,19 @@ function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup)
 				self.gib_type = "head_damege" 
 			end
 		end
-		self.madness_last_dmg_total = dmginfo:GetDamage()
-		self.madness_last_dmg_force = dmginfo:GetDamageForce()
+		if hitgroup == 2 and dmginfo:GetDamage() >= 90 and dmginfo:GetDamageType() == DMG_SLASH then
+			self.gib_type = "half"
+        end
 	end
+	if hitgroup == HITGROUP_LEFTLEG and dmginfo:GetDamage() >= 25 then --Dismember foot code
+		madness_combat_snpc_doText(self,"my LEG")
+		self.gib_type = "l_leg"
+	elseif hitgroup == HITGROUP_RIGHTLEG and dmginfo:GetDamage() >= 25 then --Dismember foot code
+		madness_combat_snpc_doText(self,"my LEG")
+		self.gib_type = "R_leg"
+	end
+	self.madness_last_dmg_total = dmginfo:GetDamage()
+	self.madness_last_dmg_force = dmginfo:GetDamageForce()
 end
 
 function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
@@ -54,6 +64,39 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 
 			if IsValid(phys) then
 				phys:SetMaterial("alienflesh")
+			end
+		end
+	end
+	if self.gib_type ~= "head_damege" and dmginfo:GetDamageType() == 4 or dmginfo:GetDamageType() == 1024 then
+		local hit = madness_GetClosestPhysBone(corpseEnt,dmginfo).PhysicsBone --get hit physbone
+		if hit == nil then
+			return 
+		end
+		local bone = corpseEnt:TranslatePhysBoneToBone(hit)
+		local bone_name = corpseEnt:GetBoneName( bone ) 
+		self.head_sliced = true
+		if bone_name == "head" then
+			local distance = corpseEnt:GetBonePosition(corpseEnt:LookupBone("head")):Distance(dmginfo:GetDamagePosition())
+			if distance > 18 then
+				corpseEnt:SetBodygroup(1, 6)
+				corpseEnt:SetBodygroup(2, 0)
+				if self.is_madness_VR == false then
+					sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
+					if self.is_yellow_blood == true then
+						self:CreateGibEntity("prop_physics","models/noob_dev2323/madness/gibs/half_head_alt.mdl",{Pos=corpseEnt:LocalToWorld(Vector(0,0,54)),Ang=corpseEnt:GetAngles()+Angle(0,0,0),Vel=corpseEnt:GetRight()*math.Rand(-350,350)+self:GetForward()*math.Rand(-200,-300)})	
+					else
+						ParticleEffect("blood_impact_red_01_goop",self:GetAttachment(self:LookupAttachment("head_gib")).Pos,self:GetAngles())
+						self:CreateGibEntity("prop_physics","models/noob_dev2323/madness/gibs/half_head.mdl",{Pos=corpseEnt:LocalToWorld(Vector(0,0,54)),Ang=corpseEnt:GetAngles()+Angle(0,0,0),Vel=corpseEnt:GetRight()*math.Rand(-350,350)+self:GetForward()*math.Rand(-200,-300)})	
+					end
+				end
+			else 
+				sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
+				local bone = corpseEnt:TranslateBoneToPhysBone(corpseEnt:LookupBone("head"))
+				corpseEnt:RemoveInternalConstraint(bone)
+				local head_bone = corpseEnt:LookupBone("head")
+				local bone = corpseEnt:TranslateBoneToPhysBone(head_bone)
+				local colide = corpseEnt:GetPhysicsObjectNum( bone )
+				colide:AddVelocity(dmginfo:GetDamageForce())
 			end
 		end
 	end
@@ -101,27 +144,12 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 			}
 		}
 
-		if self.HasGibOnDeathEffects and not self.isVR then
-			local att = corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head_gib"))
-
-			local blood = EffectData()
-			blood:SetOrigin(att.Pos)
-			blood:SetScale(data.scale)
-			blood:SetColor(VJ_Color2Byte(data.color))
-			util.Effect("VJ_Blood1", blood)
-
-			local particle = ents.Create("info_particle_system")
-			local head = corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head"))
-
-			particle:SetKeyValue("effect_name", data.particle)
-			particle:SetPos(head.Pos)
-			particle:SetAngles(head.Ang)
-			particle:SetParent(corpseEnt)
-			particle:Fire("SetParentAttachment", "head")
-			particle:Spawn()
-			particle:Activate()
-			particle:Fire("Start", "", 0)
-			particle:Fire("Kill", "", 7)
+		if self.HasGibOnDeathEffects and not self.isVR and GetConVar("vj_madness_blood"):GetInt() == 1 then
+			if self.is_yellow_blood == true then
+				vj_madness_make_blood(corpseEnt,"head",true ) --i love shit code
+			else
+				vj_madness_make_blood(corpseEnt,"head")	
+			end
 		end
 
 		corpseEnt.Head_gibbed = true
@@ -164,12 +192,33 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 		local bone = corpseEnt:TranslateBoneToPhysBone(head_bone)
 		local colide = corpseEnt:GetPhysicsObjectNum( bone )
 		colide:AddVelocity(Vector(0,0,999))
-		corpseEnt:SetBodygroup(0, 1)
+		corpseEnt:SetBodygroup(0, 2)
 	end
 	if self:GetBodygroup(2) == 1 and math.random(1, 4) == 1 then
 		local Vel = self:GetRight()*math.Rand(-1000,1000)+self:GetForward()*math.Rand(-1000,10) 
 		corpseEnt:SetBodygroup(2,0)
 		self:CreateGibEntity("prop_physics","models/noob_dev2323/madness/gibs/glasses_prop.mdl",{Pos=self:GetAttachment(self:LookupAttachment("glasses")).Pos,Ang=self:GetAngles(),Vel=vel})
+	end
+	if self.gib_type == "l_leg" then
+		corpseEnt:ManipulateBoneScale(corpseEnt:LookupBone("L_foot"),Vector(0,0,0))
+		local forceMult = math.Clamp(self.madness_last_dmg_total, 0, 2000 )
+		local Vel = self.madness_last_dmg_force:GetNormalized()*forceMult + VectorRand()*forceMult
+
+		self:CreateGibEntity("prop_physics","models/noob_dev2323/madness/gibs/feet.mdl",{Pos = corpseEnt:GetBonePosition(corpseEnt:LookupBone("L_foot")),Ang = self:GetAngles(),Vel = vel})
+		local colide = corpseEnt:GetPhysicsObjectNum( corpseEnt:TranslateBoneToPhysBone(corpseEnt:LookupBone("L_foot")) )
+		colide:EnableCollisions(false)
+	end
+	if self.gib_type == "R_leg" then
+		corpseEnt:ManipulateBoneScale(corpseEnt:LookupBone("R_foot"),Vector(0,0,0))
+		local forceMult = math.Clamp(self.madness_last_dmg_total, 0, 2000 )
+		local Vel = self.madness_last_dmg_force:GetNormalized()*forceMult + VectorRand()*forceMult
+
+		self:CreateGibEntity("prop_physics","models/noob_dev2323/madness/gibs/feet.mdl",{Pos = corpseEnt:GetBonePosition(corpseEnt:LookupBone("R_foot")),Ang = self:GetAngles(),Vel = vel})
+		local colide = corpseEnt:GetPhysicsObjectNum( corpseEnt:TranslateBoneToPhysBone(corpseEnt:LookupBone("R_foot")) )
+		colide:EnableCollisions(false)
+	end
+	if self:GetClass() == "npc_vj_aahw_elite_bodyguards" and not self.gib_type == "head_less" then
+		bonemerge_prop_on_npc("models/noob_dev2323/madness/npc/w_glasses_body_guard.mdl",corpseEnt)
 	end
 end
 

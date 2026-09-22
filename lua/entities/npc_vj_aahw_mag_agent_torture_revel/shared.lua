@@ -1,0 +1,6 @@
+ENT.Base 		= "npc_vj_aahw_mag_agent_torture"
+ENT.Type 		= "ai"
+ENT.PrintName 		= "aahw mag agent torture rebel"
+ENT.Author 		= "noob_dev2323"
+ENT.Contact 		= "http://steamcommunity.com/groups/vrejgaming"
+ENT.Category		= "madness combat remake"

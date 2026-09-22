@@ -84,6 +84,9 @@ function ENT:TranslateActivity(act)
 		end
 		return self.AlienC_FlyAnim_Up -- Fallback animation
 	end
+	if act == ACT_IDLE then
+		return ACT_FLY -- your activity here
+	end
 	return self.BaseClass.TranslateActivity(self, act)
 end
 

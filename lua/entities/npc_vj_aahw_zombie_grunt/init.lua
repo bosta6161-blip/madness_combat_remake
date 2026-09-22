@@ -55,6 +55,7 @@ ENT.SightDistance = 18000 -- Initial sight distance | To retrieve: "self:GetMaxL
 -----------------------------------custom---------------------------
 ENT.is_madness_combat_npc = true 
 ENT.is_madness_hurt = false
+ENT.has_jaw = true
 ENT.grunt_status = {
 	life = 40,
 	is_trained = false 
@@ -88,7 +89,11 @@ function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup)
 					local Vel = self:GetRight()*math.Rand(-1000,1000)+self:GetForward()*math.Rand(-1000,10) 
 					self:CreateGibEntity("obj_vj_gib","models/noob_dev2323/madness/gibs/jaw_prop.mdl",{BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD",Pos=self:GetAttachment(self:LookupAttachment("glasses")).Pos,Ang=self:GetAngles(),Vel=vel})
 				end
+				self.SoundTbl_MeleeAttack = {"noob_dev2323/madness/melee/Punch1.wav","noob_dev2323/madness/melee/Punch2.wav","noob_dev2323/madness/melee/Punch3.wav","noob_dev2323/madness/melee/Punch4.wav","noob_dev2323/madness/melee/Punch5.wav"}
+				self.SoundTbl_BeforeMeleeAttack = {"noob_dev2323/madness/grunt/Grunt.wav","noob_dev2323/madness/grunt/Grunt-1.wav","noob_dev2323/madness/grunt/Grunt-2.wav","noob_dev2323/madness/grunt/Grunt-3.wav","noob_dev2323/madness/grunt/Grunt-4.wav","noob_dev2323/madness/grunt/Grunt-5.wav","noob_dev2323/madness/grunt/Grunt-6.wav","noob_dev2323/madness/grunt/Grunt-7.wav","noob_dev2323/madness/grunt/Grunt-8.wav"}
+				self.AnimTbl_MeleeAttack = {"vjges_melee_attack_01","vjges_melee_attack_02"} -- Melee Attack Animations
 				self:SetBodygroup(3, 1)
+				self.has_jaw = false
 			end
 			if self.madness_head_damege_table[hitgroup] and not self.head_gib then 
 				self.head_gib = true 
@@ -97,7 +102,17 @@ function ENT:CustomOnTakeDamage_OnBleed(dmginfo, hitgroup)
 				ParticleEffect("blood_impact_red_01_goop",self:GetAttachment(self:LookupAttachment(att)).Pos,self:GetAngles())
 				sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", self:GetPos(), 75, 100, 1)
 			end
+			if hitgroup == HITGROUP_LEFTLEG then --Dismember foot code
+				self.gib_type = "l_leg"
+			elseif hitgroup == HITGROUP_RIGHTLEG then --Dismember foot code
+				self.gib_type = "R_leg"
+			end
 		end
+		if hitgroup == 2 and dmginfo:GetDamage() >= 90 and dmginfo:GetDamageType() == DMG_SLASH then
+			self.gib_type = "half"
+		end
+		self.madness_last_dmg_total = dmginfo:GetDamage()
+		self.madness_last_dmg_force = dmginfo:GetDamageForce()
 	end
 end
 
@@ -121,52 +136,30 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 	end
 	if self.gib_type == "head_less" then
 		local data = {
-			scale = 30,
-			color = Color(130, 19, 10),
 			particle = "blood_advisor_puncture_withdraw",
 			decal = "VJ_AAWH_GRUNT_BLOOD",
 			gibs = {
-				{"head_chunk2.mdl", "2"},
-				{"head_chunk1.mdl", "5"},
-				{"head_chunk6.mdl", "4"},
-				{"head_chunk4.mdl", "head_gib"},
-				{"head_chunk5.mdl", "head_gib"},
-				{"head_chunk3.mdl", "head"}
+				{"models/noob_dev2323/madness/gibs/gib01.mdl", "2"},
+				{"models/noob_dev2323/madness/gibs/gib02.mdl", "5"},
+				{"models/noob_dev2323/madness/gibs/gib01.mdl", "4"},
+				{"models/noob_dev2323/madness/gibs/gib02.mdl", "head"}
 			}
 		}
 
-		if self.HasGibOnDeathEffects then
-			local att = corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head_gib"))
-
-			local blood = EffectData()
-			blood:SetOrigin(att.Pos)
-			blood:SetScale(data.scale)
-			blood:SetColor(VJ_Color2Byte(data.color))
-			util.Effect("VJ_Blood1", blood)
-
-			local particle = ents.Create("info_particle_system")
-			local head = corpseEnt:GetAttachment(corpseEnt:LookupAttachment("head"))
-
-			particle:SetKeyValue("effect_name", data.particle)
-			particle:SetPos(head.Pos)
-			particle:SetAngles(head.Ang)
-			particle:SetParent(corpseEnt)
-			particle:Fire("SetParentAttachment", "head")
-			particle:Spawn()
-			particle:Activate()
-			particle:Fire("Start", "", 0)
-			particle:Fire("Kill", "", 7)
+		if self.HasGibOnDeathEffects and GetConVar("vj_madness_blood"):GetInt() == 1 then
+			vj_madness_make_blood(corpseEnt,"head")
 		end
 
 		corpseEnt.Head_gibbed = true
 
 		for _, gib in ipairs(data.gibs) do
-			local vel = Vector(math.Rand(-200, 200), math.Rand(-300, 300), math.Rand(200, 200))+Vector(dmginfo:GetDamageForce()/4)
+			local forceMult = math.Clamp(self.madness_last_dmg_total, 0, 2000 )
+			local Vel = self.madness_last_dmg_force:GetNormalized()*forceMult + VectorRand()*forceMult
 			local att = self:GetAttachment(self:LookupAttachment(gib[2]))
 
 			self:CreateGibEntity(
 				"obj_vj_gib",
-				"models/noob_dev2323/madness/gibs/" .. gib[1],
+				gib[1],
 				{CollisionDecal = data.decal,Pos = att.Pos,Ang = self:GetAngles(),Vel = vel})
 		end
 
@@ -176,12 +169,56 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo, hitgroup, corpseEnt)
 		corpseEnt:SetBodygroup(4, 1)
 
 		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1, 5) .. ".wav",corpseEnt:GetPos(),75,100,1)
+		local colide = corpseEnt:GetPhysicsObjectNum(corpseEnt:TranslateBoneToPhysBone(corpseEnt:LookupBone("head"))) --get bone id
+		colide:EnableCollisions(false)
+		colide:SetMass(0.01)
+	end
+	if self.gib_type == "half" then
+		if self.HasGibDeathParticles == true then
+			local bloodeffect = EffectData()
+			bloodeffect:SetOrigin(self:GetPos() +self:OBBCenter())
+			if self.is_yellow_blood == true then
+				bloodeffect:SetColor(VJ_Color2Byte(Color(229,255,0)))
+			else
+				bloodeffect:SetColor(VJ_Color2Byte(Color(130,19,10)))
+			end
+			bloodeffect:SetScale(50)
+			util.Effect("VJ_Blood1",bloodeffect)
+		end
+		sound.Play("noob_dev2323/madness/gore/Dissmember" .. math.random(1,5) .. ".wav", corpseEnt:GetPos(), 75, 100, 1)
+		local bone = corpseEnt:TranslateBoneToPhysBone(corpseEnt:LookupBone("torax"))
+		corpseEnt:RemoveInternalConstraint(bone)
+		local head_bone = corpseEnt:LookupBone("torax")
+		local bone = corpseEnt:TranslateBoneToPhysBone(head_bone)
+		local colide = corpseEnt:GetPhysicsObjectNum( bone )
+		colide:AddVelocity(Vector(0,0,999))
+		corpseEnt:SetBodygroup(0, 1)
 	end
 	if self:GetBodygroup(2) == 1 and math.random(1, 4) == 1 then
 		local Vel = self:GetRight()*math.Rand(-1000,1000)+self:GetForward()*math.Rand(-1000,10) 
 		corpseEnt:SetBodygroup(2,0)
 		self:CreateGibEntity("prop_physics","models/noob_dev2323/madness/gibs/glasses_prop.mdl",{Pos=self:GetAttachment(self:LookupAttachment("glasses")).Pos,Ang=self:GetAngles(),Vel=vel})
 	end
+
+	if self.gib_type == "l_leg" then
+		corpseEnt:ManipulateBoneScale(corpseEnt:LookupBone("L_foot"),Vector(0,0,0))
+		local forceMult = math.Clamp(self.madness_last_dmg_total, 0, 2000 )
+		local Vel = self.madness_last_dmg_force:GetNormalized()*forceMult + VectorRand()*forceMult
+
+		self:CreateGibEntity("prop_physics","models/noob_dev2323/madness/gibs/feet.mdl",{Pos = corpseEnt:GetBonePosition(corpseEnt:LookupBone("L_foot")),Ang = self:GetAngles(),Vel = vel})
+		local colide = corpseEnt:GetPhysicsObjectNum( corpseEnt:TranslateBoneToPhysBone(corpseEnt:LookupBone("L_foot")) )
+		colide:EnableCollisions(false)
+	end
+	if self.gib_type == "R_leg" then
+		corpseEnt:ManipulateBoneScale(corpseEnt:LookupBone("R_foot"),Vector(0,0,0))
+		local forceMult = math.Clamp(self.madness_last_dmg_total, 0, 2000 )
+		local Vel = self.madness_last_dmg_force:GetNormalized()*forceMult + VectorRand()*forceMult
+
+		self:CreateGibEntity("prop_physics","models/noob_dev2323/madness/gibs/feet.mdl",{Pos = corpseEnt:GetBonePosition(corpseEnt:LookupBone("R_foot")),Ang = self:GetAngles(),Vel = vel})
+		local colide = corpseEnt:GetPhysicsObjectNum( corpseEnt:TranslateBoneToPhysBone(corpseEnt:LookupBone("R_foot")) )
+		colide:EnableCollisions(false)
+	end
+
 end
 function ENT:SetUpGibesOnDeath(dmginfo,hitgroup)
 	if GetConVar("vj_madness_gore"):GetBool() then
@@ -209,6 +246,66 @@ function ENT:SetUpGibesOnDeath(dmginfo,hitgroup)
 		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib02.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
 		self:CreateGibEntity("obj_vj_gib", "models/noob_dev2323/madness/gibs/gib01.mdl", {BloodType="Red", BloodDecal="VJ_AAWH_GRUNT_BLOOD"})
 		return true
+	end
+end
+ENT.InfectionClasses = {
+	npc_vj_aahw_grunt = true,
+	npc_vj_aahw_armed_grunt = true,
+	npc_vj_aahw_elite_bodyguards = true,
+	npc_vj_aahw_grunt_melee = true,
+	npc_vj_aahw_agent = true,
+}
+
+function ENT:CustomOnMeleeAttack_AfterChecks(TheHitEntity) 
+	local victim = TheHitEntity
+	local playercontroller = self.VJ_TheControllerEntity
+	local cameramode = self.VJ_TheControllerEntity.VJC_Camera_Mode
+	if victim.infected then return end
+	if victim:IsNPC() and self.InfectionClasses[victim:GetClass()] and victim:Health() > 0 and self.has_jaw == true then -- make sure our victim is a valid infection target
+		victim.infected = true 
+		victim:VJ_ACT_PLAYACTIVITY("ACT_INFECTED",true,false,false) 
+		victim.TurningSpeed = 0
+		VJ_EmitSound(victim,"noob_dev2323/madness/grunt/die.wav")
+		victim.HasDeathRagdoll = false
+		local zClass = "npc_vj_aahw_zombie_grunt" --Fallback class for the zombie NPC we will spawn
+		local zPos = victim:GetPos()
+		victim.VJ_NPC_Class = {"CLASS_ZOMBIE"} --Stop NPCs from attacking victim
+		victim.BringFriendsOnDeath = false
+		victim:SetBodygroup(1,5)
+		if victim:GetClass() == "npc_vj_aahw_agent" then
+			zClass = "npc_vj_aahw_zombie_agent"
+		end
+		
+		timer.Simple(0.5,function() -- Overridden to 30 seconds because Barney's infection animation loops instead of lasting a long time.
+			if IsValid(victim) then
+			
+				local zombie = ents.Create(zClass)
+				zombie:SetPos(zPos)
+				zombie:SetAngles(victim:GetAngles())
+				zombie:SetColor(victim:GetColor())
+				zombie:SetMaterial(victim:GetMaterial())
+				zombie:Spawn()
+				zombie:AddEffects(32) -- hide zombie
+				if IsValid(victim) then
+					undo.ReplaceEntity(victim,zombie)
+				end
+				timer.Simple(0.52,function() --The zombie actually spawns in early and is hidden, this is to move the getup animation in place before showing the zombie model
+					if IsValid(zombie) then
+						SafeRemoveEntity(victim)
+						zombie:SetPos(zPos)
+						
+						zombie:RemoveEffects(32)
+						if zombie.HasGibDeathParticles == true then
+							local bloodeffect = EffectData()
+							bloodeffect:SetOrigin(zombie:GetPos() +zombie:OBBCenter())
+							bloodeffect:SetColor(VJ_Color2Byte(Color(130,19,10)))
+							bloodeffect:SetScale(50)
+							util.Effect("VJ_Blood1",bloodeffect)
+						end
+					end
+				end)
+			end
+		end)
 	end
 end
 -- All functions and variables are located inside the base files. It can be found in the GitHub Repository: https://github.com/DrVrej/VJ-Base

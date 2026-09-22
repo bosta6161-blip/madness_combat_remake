@@ -8,7 +8,7 @@ SWEP.Slot           = 1
 SWEP.SlotPos        = 0 
 SWEP.Weight         = 5
 
-SWEP.ViewModel  = "models/weapons/c_smg1.mdl"
+SWEP.ViewModel  = "models/noob_dev2323/madness/weapons/c_smg1.mdl"
 SWEP.WorldModel = "models/noob_dev2323/madness/weapons/w_mp5.mdl"
 
 SWEP.Primary.Delay = 0.1
@@ -20,4 +20,7 @@ SWEP.Primary.DefaultClip = 24
 SWEP.Primary.Sound       = Sound("noob_dev2323/madness/weapons/MP5k.wav")
 
 SWEP.bullet_count = 1
-SWEP.damage = 10
+SWEP.damage = 12
+
+SWEP.IronSightsPos = Vector(-6.529, -4.962, 0.481)
+SWEP.IronSightsAng = Vector(0, 0, 0)

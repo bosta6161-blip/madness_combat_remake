@@ -19,7 +19,7 @@ ENT.grunt_hold_type = "pistol"
 
 ENT.grunt_no_pain_animation = true
 ENT.NextRangeAttackTime = 0 --grunt time delay
-ENT.madness_bonemerge_prop = "models/noob_dev2323/madness/weapons/w_bombsuit.mdl"
+ENT.madness_bonemerge_prop = "models/noob_dev2323/madness/weapons/w_h&k_mp5.mdl"
 ENT.madness_weapon_status = {
     damege = 3,
     force = 5,
@@ -35,8 +35,4 @@ function ENT:CustomOnInitialize()
 	bonemerge_prop_on_npc("models/noob_dev2323/madness/weapons/w_h&k_mp5.mdl",self)
     bonemerge_prop_on_npc("models/noob_dev2323/madness/npc/w_glasses_body_guard.mdl",self)
     self.CurrentAmmo = 45
-end
-function ENT:CustomOnKilled(dmginfo,hitgroup)
-    self:Give("weapon_aahw_glock_20")
-    self:DropWeapon()
 end

@@ -7,6 +7,7 @@ include('shared.lua')
 -----------------------------------------------*/
 ENT.Model = {"models/noob_dev2323/madness/npc/mag_torture_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
 ENT.StartHealth = 1500
+ENT.VJ_NPC_Class = {"CLASS_AAHW"} -- NPCs with the same class with be allied to each other
 ENT.HealthRegenParams = {
 	Enabled = true , -- Can it regenerate its health?
 	Amount = 10, -- How much should the health increase after every delay?

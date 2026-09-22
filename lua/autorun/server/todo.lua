@@ -15,12 +15,9 @@
 
 
 --need to release
---guard
---triki
 --more gore damege
 --modo wave talves
 --atp backflip
---punt walk
 --side grunt hole
 
 --nevada map
