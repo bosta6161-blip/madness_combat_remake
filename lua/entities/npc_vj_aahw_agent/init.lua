@@ -20,7 +20,7 @@ ENT.madness_weapon_status = {
     damege = 5,
     force = 10,
     amount = 1,
-    spread = Vector(0.09, 0.09, 0.05)
+    spread = Vector(0.03, 0.03, 0.03)
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()

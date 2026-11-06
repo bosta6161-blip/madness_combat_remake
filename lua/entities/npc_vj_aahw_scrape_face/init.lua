@@ -82,14 +82,8 @@ function ENT:CustomOnInitialize()
 	self:SetBodygroup(1,7)
 	bonemerge_prop_on_npc("models/noob_dev2323/madness/npc/scrape_face.mdl",self)
 end
-function ENT:CustomOnThink_AIEnabled()
-	local explodetime = GetConVarNumber("vj_madness_scrape_face_explodetime")
-	timer.Simple(0 + explodetime, function()
-		if IsValid(self) then
-			self:TakeDamage(self:Health(), attacker, attacker)
-		end
-	end)
-end
+
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetUpGibesOnDeath(dmginfo,hitgroup)
 	if GetConVar("vj_madness_gore"):GetBool() then

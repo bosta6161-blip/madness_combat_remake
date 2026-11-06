@@ -6,7 +6,7 @@ include('shared.lua')
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
 ENT.Model = {"models/noob_dev2323/madness/npc/grunt_npc.mdl"} -- The game will pick a random model from the table when the SNPC is spawned | Add as many as you want
-ENT.StartHealth = 150
+ENT.StartHealth = 100
 ENT.BloodDecal = {"VJ_AAWH_GRUNT_YELLOW_BLOOD"}
 ENT.BloodColor = "Yellow" -- Its blood type, this will determine the blood decal, particle, etc.
 ENT.HealthRegenParams = {
@@ -28,10 +28,10 @@ ENT.grunt_no_pain_animation = true
 ENT.grunt_hold_type = "pistol"
 ENT.NextRangeAttackTime = 0 --grunt time delay
 ENT.madness_weapon_status = {
-    damege = 3,
+    damege = 1,
     force = 5,
     amount = 1,
-    spread = Vector(0.04, 0.05, 0.04),
+    spread = Vector(0.01, 0.02, 0.01),
 	custom_gun_sound = "noob_dev2323/madness/weapons/MP5k.wav",
 	attachment = "shot2"
 }

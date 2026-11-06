@@ -25,7 +25,7 @@ function vj_madness_make_corpse_destructible(ent)
     end
 end
 function vj_madness_make_blood(ragdoll,bone_name,YELLOW)
-	if GetConVar("goremod_blood"):GetBool() then
+	if GetConVar("vj_madness_blood"):GetBool() then
         timer.Simple(0, function()
             if not ragdoll:IsValid() then
                 return 

@@ -37,7 +37,7 @@ ENT.madness_weapon_status = {
     damege = 3,
     force = 5,
     amount = 1,
-    spread = Vector(0.09, 0.09, 0.09),
+    spread = Vector(0.04, 0.04, 0.04),
 	custom_gun_sound = "noob_dev2323/madness/weapons/MP5k.wav"
 }
 ENT.RangeDistance = 1000 -- This is how far away it can shoot

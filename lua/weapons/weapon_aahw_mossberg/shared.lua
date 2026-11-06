@@ -4,7 +4,7 @@ SWEP.PrintName = "aahw mossberg"
 SWEP.Category = "madness combat"
 SWEP.Spawnable = true
 
-SWEP.Slot = 4
+SWEP.Slot = 3
 SWEP.SlotPos        = 0 
 SWEP.Weight         = 5
 
@@ -20,8 +20,10 @@ SWEP.Primary.DefaultClip = 8
 SWEP.Primary.Sound       = Sound("noob_dev2323/madness/weapons/mossberg.wav")
 
 SWEP.bullet_count = 12
-SWEP.Spread = Vector(0.08,0.08,0.08)
+SWEP.Spread = Vector(0.07,0.07,0.07)
 SWEP.damage = 8
+SWEP.force = 10
+
 
 SWEP.ReloadMode = "Shell"
 SWEP.ReloadTime = 0.3
